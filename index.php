@@ -1,33 +1,19 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Iniciar sesión (por si se necesita verificar si el usuario ya está logueado)
+session_start();
 
-$pageTitle = "Gestion el Agreval";
-
-include 'includes/header.php';
-?>
-
-
-
-<?php
-
-require_once 'config/config.php';
-
-// Intentar conectar
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Verificar conexión
-if ($conn->connect_error) {
-    echo "ERROR: " . $conn->connect_error;
+// Verificar si el usuario ya está logueado
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    // Si el usuario ya está logueado, redirigirlo según su cargo
+    if ($_SESSION['cargo'] == 'Administrador') {
+        header("Location: admin/dashboard.php");
+    } else {
+        header("Location: dashboard.php");
+    }
+    exit();
 } else {
-    echo "CONEXIÓN EXITOSA";
-    $conn->close();
+    // Si el usuario no está logueado, redirigirlo a la página de login
+    header("Location: login.php");
+    exit();
 }
-?>
-
-
-
-<?php
-
-include 'includes/footer.php';
 ?>
