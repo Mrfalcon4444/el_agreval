@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Verificar que no estén vacíos
     if (empty($correo) || empty($password)) {
-        header("Location: login.php?error=campos_vacios");
+        header("Location: ../login.php?error=campos_vacios");
         exit();
     }
     
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($estado_activo != 1) {
             $stmt->close();
             $conn->close();
-            header("Location: login.php?error=inactivo");
+            header("Location: ../login.php?error=inactivo");
             exit();
         }
         
@@ -71,12 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             
-            header("Location: login.php?error=credenciales");
+            header("Location: ../login.php?error=credenciales");
             exit();
         }
     } else {
         
-        header("Location: login.php?error=credenciales");
+        header("Location: ../login.php?error=credenciales");
         exit();
     }
     
@@ -85,6 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 } else {
     
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
