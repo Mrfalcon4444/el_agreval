@@ -7,7 +7,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost') {
     $db_password = 'Supernova#2025'; 
     $db_name = 'u390193918_Agreval';
 } else {
-    // hositinge
+    // hositinger
     $db_host = 'localhost'; 
     $db_user = 'u390193918_root';
     $db_password = 'Supernova#2025';
