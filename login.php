@@ -26,7 +26,7 @@ include 'includes/header.php';
       </div>
       <?php endif; ?>
       
-      <form action="procesar_login.php" method="POST" class="space-y-6">
+      <form action="auth/procesar_login.php" method="POST" class="space-y-6">
         <div class="form-control w-full">
           <label class="label">
             <span class="label-text">Correo Electrónico</span>
@@ -78,10 +78,9 @@ include 'includes/header.php';
   </div>
 </div>
 
-<!-- Agregar JavaScript para mostrar/ocultar los mensajes de validación -->
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Obtener todos los campos con validación
   const validators = document.querySelectorAll('.validator input');
   
   validators.forEach(input => {
@@ -108,6 +107,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php
-// Incluir el pie de página común
 include 'includes/footer.php';
 ?>
