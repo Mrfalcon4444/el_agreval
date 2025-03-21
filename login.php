@@ -1,8 +1,7 @@
 <?php
-// Definir el título de la página
+
 $pageTitle = "Iniciar Sesión - El Agreval";
 
-// Incluir el encabezado común
 include 'includes/header.php';
 ?>
 
@@ -45,7 +44,8 @@ include 'includes/header.php';
         
         <div class="form-control w-full">
           <label class="label">
-            <span class="label-text">Contraseña</span>
+            <span class="label-text">Contraseña </span>
+            <br>
           </label>
           <label class="input validator">
             <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
     
-    // Ocultar mensaje de validación cuando el campo obtiene el foco
     input.addEventListener('focus', function() {
       const hint = this.closest('.form-control').querySelector('.validator-hint');
       if (!hint) return;

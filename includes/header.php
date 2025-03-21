@@ -14,13 +14,13 @@
     <link href="assets/css/styles.css" rel="stylesheet" type="text/css" />
     <?php endif; ?>
     
-    <!-- Scripts adicionales -->
+
     <script>
-        // Puedes cambiar el tema por defecto aquí o usar una variable PHP
+       
         document.documentElement.setAttribute('data-theme', '<?php echo isset($theme) ? $theme : 'light'; ?>')
     </script>
 </head>
 <body>
-    <!-- Aquí puedes incluir elementos comunes como barra de navegación -->
+ 
     <div class="min-h-screen bg-base-100">
-        <!-- El contenido de cada página irá después de este punto -->
+ 
