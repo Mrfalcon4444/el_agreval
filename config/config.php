@@ -2,7 +2,7 @@
 // verifica si esta corriendo localente o el hostinger
 if ($_SERVER['HTTP_HOST'] == 'localhost') {
     // local
-    $db_host = 'mysql-xxx.hostinger.com'; 
+    $db_host = 'srv559.hstgr.io'; 
     $db_user = 'u390193918_root'; 
     $db_password = 'Supernova#2025'; 
     $db_name = 'u390193918_Agreval';
