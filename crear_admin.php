@@ -5,7 +5,7 @@
  */
 
 // Incluir archivo de configuración
-require_once 'config.php';
+require_once 'config/config.php';
 
 // Crear conexión
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
