@@ -3,7 +3,7 @@
 session_start();
 
 // Incluir el archivo de configuración de la base de datos
-require_once 'config.php';
+require_once '../config/config.php';
 
 // Verificar si se recibieron datos por POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -47,9 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
         
-        // Verificar la contraseña
-        // Nota: Asumiendo que la contraseña está almacenada con password_hash()
-        // Si está en texto plano o con otro método, ajusta esta parte
         if (password_verify($password, $hash_contraseña)) {
             // Contraseña correcta - Iniciar sesión
             $_SESSION['id_empleado'] = $id_empleado;
@@ -58,16 +55,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['nickname'] = $nickname;
             $_SESSION['loggedin'] = true;
             
-            // Si el usuario marcó "Recordarme", establecer una cookie
             if (isset($_POST['remember']) && $_POST['remember'] == 'on') {
-                $token = bin2hex(random_bytes(16)); // Generar token aleatorio
+                $token = bin2hex(random_bytes(16)); 
                 
-                // Guardar token en la base de datos (requeriría una tabla adicional de tokens)
-                // Por ahora, simplemente establecemos la cookie
-                setcookie('remember_token', $token, time() + (86400 * 30), "/"); // 30 días
+
+                setcookie('remember_token', $token, time() + (86400 * 30), "/"); 
             }
             
-            // Redireccionar al dashboard o página principal según el cargo
+            
             if ($cargo == 'Administrador') {
                 header("Location: admin/dashboard.php");
             } else {
@@ -75,21 +70,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             exit();
         } else {
-            // Contraseña incorrecta
+            
             header("Location: login.php?error=credenciales");
             exit();
         }
     } else {
-        // No se encontró usuario con ese correo
+        
         header("Location: login.php?error=credenciales");
         exit();
     }
     
-    // Cerrar conexiones
+    
     $stmt->close();
     $conn->close();
 } else {
-    // Si no se envió por POST, redirigir al formulario de login
+    
     header("Location: login.php");
     exit();
 }
