@@ -8,7 +8,7 @@ include 'includes/header.php';
     <div class="card-body">
       <!-- Logo -->
       <div class="flex justify-center mb-6">
-        <img src="images/logo.png" alt="Logo de El Agreval" class="w-32 h-auto">
+        <img src="imagenefs/logo.png" alt="Logo de El Agreval" class="w-32 h-auto">
       </div>
 
       <h2 class="card-title text-2xl font-bold text-center w-full mb-6">Iniciar Sesión</h2>
