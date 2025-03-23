@@ -5,7 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Incluir archivo de configuración
-require_once 'config.php';
+require_once 'config/config.php';
 
 echo "<h1>Cargando datos de ejemplo para escuela privada</h1>";
 
