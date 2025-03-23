@@ -26,9 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare("SELECT id_empleado, contraseña, cargo, nickname, estado_activo FROM EMPLEADOS WHERE correo = ?");
     
     $stmt->bind_param("s", $correo);
-    
     $stmt->execute();
-    
     $stmt->bind_result($id_empleado, $hash_contraseña, $cargo, $nickname, $estado_activo);
     
     // Verificar si se encontró un usuario con ese correo
@@ -49,36 +47,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['nickname'] = $nickname;
             $_SESSION['loggedin'] = true;
             
+            // Manejo de "Recordarme"
             if (isset($_POST['remember']) && $_POST['remember'] == 'on') {
                 $token = bin2hex(random_bytes(16)); 
-                
-
                 setcookie('remember_token', $token, time() + (86400 * 30), "/"); 
             }
             
-            
+            // Redirección según el cargo
             if ($cargo == 'Administrador') {
                 header("Location: ../admin/dashboard.php");
+            } elseif ($cargo == 'RRHH') { 
+                header("Location: ../rrhh/dashboard.php"); // Redirige a RRHH
             } else {
-                header("Location: ../dashboard.php");
+                header("Location: ../dashboard.php"); // Para otros usuarios
             }
             exit();
         } else {
-            
             header("Location: ../login.php?error=credenciales");
             exit();
         }
     } else {
-        
         header("Location: ../login.php?error=credenciales");
         exit();
     }
     
-    
     $stmt->close();
     $conn->close();
 } else {
-    
     header("Location: ../login.php");
     exit();
 }
+?>
