@@ -28,9 +28,9 @@ include 'includes/header.php';
       </div>
       <?php endif; ?>
       
-      <form action="auth/procesar_login.php" method="POST" class="space-y-6">
-        <div class="form-control w-full">
-          <label class="label">
+      <form action="auth/procesar_login.php" method="POST" class="space-y-6 flex flex-col items-center">
+        <div class="form-control w-full max-w-xs">
+          <label class="label flex justify-center">
             <span class="label-text">Correo Electrónico</span>
           </label>
           <label class="input validator">
@@ -40,15 +40,14 @@ include 'includes/header.php';
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
               </g>
             </svg>
-            <input type="email" name="correo" placeholder="correo@ejemplo.com" required class="grow"/>
+            <input type="email" name="correo" placeholder="correo@ejemplo.com" required class="grow text-center"/>
           </label>
-          <div class="validator-hint hidden text-error text-sm mt-1">Ingrese un correo electrónico válido</div>
+          <div class="validator-hint hidden text-error text-sm mt-1 text-center">Ingrese un correo electrónico válido</div>
         </div>
         
-        <div class="form-control w-full">
-          <label class="label">
-            <span class="label-text">Contraseña </span>
-            <br>
+        <div class="form-control w-full max-w-xs">
+          <label class="label flex justify-center">
+            <span class="label-text">Contraseña</span>
           </label>
           <label class="input validator">
             <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -57,11 +56,11 @@ include 'includes/header.php';
                 <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
               </g>
             </svg>
-            <input type="password" name="contraseña" required placeholder="Contraseña" />
+            <input type="password" name="contraseña" required placeholder="Contraseña" class="text-center" />
           </label>
         </div>
         
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center w-full max-w-xs">
           <label class="label cursor-pointer">
             <input type="checkbox" name="remember" class="checkbox checkbox-primary mr-2" />
             <span class="label-text">Recordarme</span>
@@ -69,8 +68,8 @@ include 'includes/header.php';
           <a href="recuperar_password.php" class="text-sm text-primary hover:underline">¿Olvidaste tu contraseña?</a>
         </div>
         
-        <div class="form-control mt-6">
-          <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+        <div class="form-control mt-6 w-full max-w-xs">
+          <button type="submit" class="btn btn-primary mx-auto w-full">Iniciar Sesión</button>
         </div>
       </form>
       
