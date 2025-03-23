@@ -58,6 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: ../admin/dashboard.php");
             } elseif ($cargo == 'RRHH') { 
                 header("Location: ../rrhh/dashboard.php"); // Redirige a RRHH
+            } elseif ($cargo == 'Empleado') { 
+                header("Location: ../empleado/dashboard.php"); // Redirige a Empleado
             } else {
                 header("Location: ../dashboard.php"); // Para otros usuarios
             }

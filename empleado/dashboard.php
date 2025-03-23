@@ -9,7 +9,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['cargo'] != 'Administrador') {
 
 require_once '../config/config.php';
 
-$pageTitle = "Panel de Recursos humanos - El Agreval";
+$pageTitle = "Panel de trabajador - El Agreval";
 
 include '../includes/header.php';
 
