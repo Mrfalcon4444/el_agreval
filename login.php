@@ -6,7 +6,7 @@ include 'includes/header.php';
 <div class="flex justify-center items-center min-h-screen bg-base-200">
   <div class="card w-full max-w-md bg-base-100 shadow-xl">
     <div class="card-body">
-      <!-- Aquí agregamos el logo -->
+      <!-- Logo -->
       <div class="flex justify-center mb-6">
         <img src="images/logo.png" alt="Logo de El Agreval" class="w-32 h-auto">
       </div>
@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const validators = document.querySelectorAll('.validator input');
   
   validators.forEach(input => {
-    // Mostrar mensaje de validación cuando el campo pierde el foco
     input.addEventListener('blur', function() {
       const hint = this.closest('.form-control').querySelector('.validator-hint');
       if (!hint) return;
