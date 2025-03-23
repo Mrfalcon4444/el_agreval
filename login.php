@@ -11,7 +11,7 @@ include 'includes/header.php';
         <img src="imagenes/logo.png" alt="Logo de El Agreval" class="w-32 h-auto">
       </div>
 
-      <h2 class="card-title text-2xl font-bold text-center w-full mb-6">Iniciar Sesión</h2>
+      <h2 class="text-2xl font-bold text-center w-full mb-6 flex justify-center">Iniciar Sesión</h2>
       
       <?php if(isset($_GET['error'])): ?>
       <div class="alert alert-error mb-4">
