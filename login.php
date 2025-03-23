@@ -1,13 +1,16 @@
 <?php
-
 $pageTitle = "Iniciar Sesión - El Agreval";
-
 include 'includes/header.php';
 ?>
 
 <div class="flex justify-center items-center min-h-screen bg-base-200">
   <div class="card w-full max-w-md bg-base-100 shadow-xl">
     <div class="card-body">
+      <!-- Aquí agregamos el logo -->
+      <div class="flex justify-center mb-6">
+        <img src="images/logo.png" alt="Logo de El Agreval" class="w-32 h-auto">
+      </div>
+
       <h2 class="card-title text-2xl font-bold text-center w-full mb-6">Iniciar Sesión</h2>
       
       <?php if(isset($_GET['error'])): ?>
@@ -77,7 +80,6 @@ include 'includes/header.php';
     </div>
   </div>
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
