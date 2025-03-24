@@ -6,7 +6,7 @@ if (!isset($_SESSION['usuario']) || ($_SESSION['rol'] !== 'admin' && $_SESSION['
     die("Acceso denegado");
 }
 
-include 'config.php'; // Archivo con la conexión a la base de datos
+include '../config/config.php'; // Archivo con la conexión a la base de datos
 
 // Función para calcular el salario neto
 function calcular_nomina($salario_base, $bonos, $deducciones) {
