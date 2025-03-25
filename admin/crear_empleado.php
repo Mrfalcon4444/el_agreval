@@ -1,3 +1,4 @@
+<!-- filepath: c:\Users\juana\Desktop\semestre 7\Inge software\el_agreval\admin\crear_empleado.php -->
 <?php
 // Iniciar sesión
 session_start();
@@ -41,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = filter_var($_POST['correo'], FILTER_SANITIZE_EMAIL);
     $contraseña = $_POST['contraseña'];
     $nickname = filter_var($_POST['nickname'], FILTER_SANITIZE_STRING);
+    $rol = filter_var($_POST['rol'], FILTER_SANITIZE_STRING);
     
     // Hashear la contraseña
     $contraseña_hash = password_hash($contraseña, PASSWORD_DEFAULT);
@@ -57,13 +59,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Preparar la consulta SQL para insertar
         $stmt = $conn->prepare("INSERT INTO EMPLEADOS (cargo, fecha_nacimiento, fecha_ingreso_escuela, rfc, 
                                 estado_activo, nss, domicilio, telefono_personal, curp, id_departamento, 
-                                correo, contraseña, nickname) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                                correo, contraseña, nickname, rol) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         // Comprobar si la preparación fue exitosa
         if ($stmt) {
             // Vincular parámetros
-            $stmt->bind_param("ssssissssisss", 
+            $stmt->bind_param("ssssissssissss", 
                             $cargo, 
                             $fecha_nacimiento, 
                             $fecha_ingreso, 
@@ -76,7 +78,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $id_departamento, 
                             $correo, 
                             $contraseña_hash, 
-                            $nickname);
+                            $nickname,
+                            $rol);
             
             // Ejecutar la consulta
             if ($stmt->execute()) {
@@ -214,6 +217,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="checkbox" name="estado_activo" class="checkbox checkbox-primary mr-2" checked>
                         <span class="label-text">Activo</span>
                     </label>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Rol</span>
+                    </label>
+                    <select name="rol" class="select select-bordered" required>
+                        <option value="" disabled selected>Seleccione un rol</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Administrador de nomina">Administrador de nomina</option>
+                        <option value="Empleado">Empleado</option>
+                    </select>
                 </div>
             </div>
             

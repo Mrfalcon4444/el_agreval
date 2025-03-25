@@ -1,3 +1,4 @@
+<!-- filepath: c:\Users\juana\Desktop\semestre 7\Inge software\el_agreval\admin\modificar_empleado.php -->
 <?php
 // Iniciar sesión
 session_start();
@@ -64,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_departamento = filter_var($_POST['id_departamento'], FILTER_SANITIZE_NUMBER_INT);
     $correo = filter_var($_POST['correo'], FILTER_SANITIZE_EMAIL);
     $nickname = filter_var($_POST['nickname'], FILTER_SANITIZE_STRING);
+    $rol = filter_var($_POST['rol'], FILTER_SANITIZE_STRING);
     $nueva_contraseña = $_POST['nueva_contraseña'];
     
     // Verificar si el correo ya existe para otro empleado
@@ -83,7 +85,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $conn->prepare("UPDATE EMPLEADOS SET 
                                 cargo = ?, fecha_nacimiento = ?, fecha_ingreso_escuela = ?, rfc = ?, 
                                 estado_activo = ?, nss = ?, domicilio = ?, telefono_personal = ?, 
-                                curp = ?, id_departamento = ?, correo = ?, contraseña = ?, nickname = ? 
+                                curp = ?, id_departamento = ?, correo = ?, contraseña = ?, nickname = ?, rol = ? 
+                                WHERE id_empleado = ?");
+            
+            $stmt->bind_param("ssssissssissssi", 
+                           $cargo, 
+                           $fecha_nacimiento, 
+                           $fecha_ingreso, 
+                           $rfc, 
+                           $estado_activo, 
+                           $nss, 
+                           $domicilio, 
+                           $telefono, 
+                           $curp, 
+                           $id_departamento, 
+                           $correo, 
+                           $contraseña_hash, 
+                           $nickname, 
+                           $rol, 
+                           $id_empleado);
+        } else {
+            // Si no hay nueva contraseña, actualizar sin cambiar la contraseña
+            $stmt = $conn->prepare("UPDATE EMPLEADOS SET 
+                                cargo = ?, fecha_nacimiento = ?, fecha_ingreso_escuela = ?, rfc = ?, 
+                                estado_activo = ?, nss = ?, domicilio = ?, telefono_personal = ?, 
+                                curp = ?, id_departamento = ?, correo = ?, nickname = ?, rol = ? 
                                 WHERE id_empleado = ?");
             
             $stmt->bind_param("ssssissssisssi", 
@@ -98,30 +124,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                            $curp, 
                            $id_departamento, 
                            $correo, 
-                           $contraseña_hash, 
                            $nickname, 
-                           $id_empleado);
-        } else {
-            // Si no hay nueva contraseña, actualizar sin cambiar la contraseña
-            $stmt = $conn->prepare("UPDATE EMPLEADOS SET 
-                                cargo = ?, fecha_nacimiento = ?, fecha_ingreso_escuela = ?, rfc = ?, 
-                                estado_activo = ?, nss = ?, domicilio = ?, telefono_personal = ?, 
-                                curp = ?, id_departamento = ?, correo = ?, nickname = ? 
-                                WHERE id_empleado = ?");
-            
-            $stmt->bind_param("ssssissssissi", 
-                           $cargo, 
-                           $fecha_nacimiento, 
-                           $fecha_ingreso, 
-                           $rfc, 
-                           $estado_activo, 
-                           $nss, 
-                           $domicilio, 
-                           $telefono, 
-                           $curp, 
-                           $id_departamento, 
-                           $correo, 
-                           $nickname, 
+                           $rol, 
                            $id_empleado);
         }
         
@@ -276,6 +280,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="checkbox" name="estado_activo" class="checkbox checkbox-primary mr-2" <?php echo ($empleado['estado_activo'] == 1) ? 'checked' : ''; ?>>
                         <span class="label-text">Activo</span>
                     </label>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Rol</span>
+                    </label>
+                    <select name="rol" class="select select-bordered" required>
+                        <option value="" disabled>Seleccione un rol</option>
+                        <option value="Administrador" <?php echo ($empleado['rol'] == 'Administrador') ? 'selected' : ''; ?>>Administrador</option>
+                        <option value="Administrador de nomina" <?php echo ($empleado['rol'] == 'Administrador de nomina') ? 'selected' : ''; ?>>Administrador de nomina</option>
+                        <option value="Empleado" <?php echo ($empleado['rol'] == 'Empleado') ? 'selected' : ''; ?>>Empleado</option>
+                    </select>
                 </div>
             </div>
             

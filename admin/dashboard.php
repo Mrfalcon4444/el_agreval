@@ -1,49 +1,5 @@
 <?php
-// Iniciar sesión
-session_start();
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-if (!isset($_SESSION['loggedin']) || $_SESSION['cargo'] != 'Administrador') {
-    header("Location: ../login.php");
-    exit();
-}
-
-
-require_once '../config/config.php';
-
-$pageTitle = "Panel de Administración - El Agreval";
-
-include '../includes/header.php';
-
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
-}
-
-$conn->set_charset("utf8");
-
-$registros_por_pagina = 10;
-$pagina_actual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1;
-$offset = ($pagina_actual - 1) * $registros_por_pagina;
-
-$total_query = "SELECT COUNT(*) as total FROM EMPLEADOS";
-$total_result = $conn->query($total_query);
-$total_row = $total_result->fetch_assoc();
-$total_empleados = $total_row['total'];
-$total_paginas = ceil($total_empleados / $registros_por_pagina);
-
-$sql = "SELECT e.id_empleado, e.cargo, e.correo, e.nickname, e.estado_activo, 
-               e.telefono_personal, e.fecha_ingreso_escuela, d.nombre_departamento 
-        FROM EMPLEADOS e
-        LEFT JOIN DEPARTAMENTO d ON e.id_departamento = d.id_departamento
-        ORDER BY e.id_empleado
-        LIMIT $offset, $registros_por_pagina";
-
-$result = $conn->query($sql);
+// ...existing code...
 ?>
 
 <div class="container mx-auto px-4 py-8">
@@ -66,6 +22,27 @@ $result = $conn->query($sql);
             <?php echo htmlspecialchars($_GET['mensaje']); ?>
         </div>
     <?php endif; ?>
+    
+    <!-- Formulario para crear nuevo empleado -->
+    <div class="mb-6">
+        <h2 class="text-xl font-bold mb-4">Agregar Nuevo Empleado</h2>
+        <form action="agregar_empleado.php" method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="rol">Rol:</label>
+            <select id="rol" name="rol" required>
+                <option value="Administrador">Administrador</option>
+                <option value="Administrador de nomina">Administrador de nomina</option>
+                <option value="Empleado">Empleado</option>
+            </select><br>
+
+            <input type="submit" value="Agregar Empleado">
+        </form>
+    </div>
     
     <!-- Botón para crear nuevo empleado -->
     <div class="mb-6">
