@@ -7,7 +7,9 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
     // Si el usuario ya está logueado, redirigirlo según su cargo
     if ($_SESSION['cargo'] == 'Administrador') {
         header("Location: admin/dashboard.php");
-    } else {
+    } elseif ($_SESSION['cargo'] == 'Administrador de nomina') {
+        header("Location: rrhh/dashboard.php");
+    }else {
         header("Location: dashboard.php");
     }
     exit();

@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Redirección según el cargo
             if ($cargo == 'Administrador') {
                 header("Location: ../admin/dashboard.php");
-            } elseif ($cargo == 'RRHH') { 
+            } elseif ($cargo == 'Administrador de nomina') { 
                 header("Location: ../rrhh/dashboard.php"); // Redirige a RRHH
             } elseif ($cargo == 'Empleado') { 
                 header("Location: ../empleado/dashboard.php"); // Redirige a Empleado
@@ -79,4 +79,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: ../login.php");
     exit();
 }
-?>
