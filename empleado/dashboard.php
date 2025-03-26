@@ -2,7 +2,7 @@
 // Iniciar sesión
 session_start();
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['cargo'] != 'Administrador') {
+if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Empleado') {
     header("Location: ../login.php");
     exit();
 }

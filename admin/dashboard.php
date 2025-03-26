@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['cargo'] != 'Administrador') {
+if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Administrador') {
     header("Location: ../login.php");
     exit();
 }
@@ -37,7 +37,7 @@ $total_empleados = $total_row['total'];
 $total_paginas = ceil($total_empleados / $registros_por_pagina);
 
 $sql = "SELECT e.id_empleado, e.cargo, e.correo, e.nickname, e.estado_activo, 
-               e.telefono_personal, e.fecha_ingreso_escuela, d.nombre_departamento 
+               e.telefono_personal, e.fecha_ingreso_escuela, d.nombre_departamento, e.rol
         FROM EMPLEADOS e
         LEFT JOIN DEPARTAMENTO d ON e.id_departamento = d.id_departamento
         ORDER BY e.id_empleado
@@ -86,6 +86,7 @@ $result = $conn->query($sql);
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Cargo</th>
+                    <th>Rol</th>
                     <th>Departamento</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
@@ -107,6 +108,7 @@ $result = $conn->query($sql);
                     <th><?php echo $row['id_empleado']; ?></th>
                     <td><?php echo htmlspecialchars($row['nickname']); ?></td>
                     <td><?php echo htmlspecialchars($row['cargo']); ?></td>
+                    <td><?php echo htmlspecialchars($row['rol'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($row['nombre_departamento'] ?? 'Sin departamento'); ?></td>
                     <td><?php echo htmlspecialchars($row['correo']); ?></td>
                     <td><?php echo htmlspecialchars($row['telefono_personal'] ?? 'No disponible'); ?></td>

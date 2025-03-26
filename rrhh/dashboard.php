@@ -6,11 +6,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['cargo'] != 'Administrador de nomina') {
+if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
     header("Location: ../login.php");
     exit();
 }
-
 
 require_once '../config/config.php';
 

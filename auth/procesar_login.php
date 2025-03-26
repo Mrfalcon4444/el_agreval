@@ -23,11 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error de conexión: " . $conn->connect_error);
     }
     
-    $stmt = $conn->prepare("SELECT id_empleado, contraseña, cargo, nickname, estado_activo FROM EMPLEADOS WHERE correo = ?");
+    $stmt = $conn->prepare("SELECT id_empleado, contraseña, cargo, nickname, estado_activo, rol FROM EMPLEADOS WHERE correo = ?");
     
     $stmt->bind_param("s", $correo);
     $stmt->execute();
-    $stmt->bind_result($id_empleado, $hash_contraseña, $cargo, $nickname, $estado_activo);
+    $stmt->bind_result($id_empleado, $hash_contraseña, $cargo, $nickname, $estado_activo, $rol);
     
     // Verificar si se encontró un usuario con ese correo
     if ($stmt->fetch()) {
@@ -44,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['id_empleado'] = $id_empleado;
             $_SESSION['correo'] = $correo;
             $_SESSION['cargo'] = $cargo;
+            $_SESSION['rol'] = $rol;
             $_SESSION['nickname'] = $nickname;
             $_SESSION['loggedin'] = true;
             
@@ -54,11 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             
             // Redirección según el cargo
-            if ($cargo == 'Administrador') {
+            if ($rol == 'Administrador') {
                 header("Location: ../admin/dashboard.php");
-            } elseif ($cargo == 'Administrador de nomina') { 
+            } elseif ($rol == 'RRHH administrador') { 
                 header("Location: ../rrhh/dashboard.php"); // Redirige a RRHH
-            } elseif ($cargo == 'Empleado') { 
+            } elseif ($rol == 'Empleado') { 
                 header("Location: ../empleado/dashboard.php"); // Redirige a Empleado
             } else {
                 header("Location: ../dashboard.php"); // Para otros usuarios
@@ -79,3 +80,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: ../login.php");
     exit();
 }
+
