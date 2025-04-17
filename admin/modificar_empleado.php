@@ -194,7 +194,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label class="label">
                         <span class="label-text">Rol</span>
                     </label>
-                    <input type="text" name="rol" value="<?php echo htmlspecialchars($empleado['rol'] ?? ''); ?>" class="input input-bordered" required>
+                    <select name="rol" class="select select-bordered" required>
+                        <option value="" disabled selected>Seleccione un rol</option>
+                        <option value="Empleado">Empleado</option>
+                        <option value="RRHH administrador">RRHH administrador</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
                 </div>
                 
                 <div class="form-control">
