@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Comprobar si la preparación fue exitosa
         if ($stmt) {
             // Vincular parámetros
-            $stmt->bind_param("ssssissssisss", 
+            $stmt->bind_param("sssssissssisss", 
                             $cargo,
                             $rol, 
                             $fecha_nacimiento, 
