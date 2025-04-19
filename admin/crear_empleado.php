@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Ya existe un empleado con ese correo electrónico.";
     } else {
         // Preparar la consulta SQL para insertar
-        $stmt = $conn->prepare("INSERT INTO EMPLEADOS (cargo, fecha_nacimiento, fecha_ingreso_escuela, rfc, 
+        $stmt = $conn->prepare("INSERT INTO EMPLEADOS (cargo, rol, fecha_nacimiento, fecha_ingreso_escuela, rfc, 
                                 estado_activo, nss, domicilio, telefono_personal, curp, id_departamento, 
                                 correo, contraseña, nickname) 
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
