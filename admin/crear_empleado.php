@@ -3,7 +3,7 @@
 session_start();
 
 // Verificar si el usuario está logueado y es administrador
-if (!isset($_SESSION['loggedin']) || $_SESSION['cargo'] != 'Administrador') {
+if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Administrador') {
     header("Location: ../login.php");
     exit();
 }
@@ -29,6 +29,7 @@ $deptos_result = $conn->query($deptos_sql);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener y sanitizar datos del formulario
     $cargo = filter_var($_POST['cargo'], FILTER_SANITIZE_STRING);
+    $rol = filter_var($_POST['rol'], FILTER_SANITIZE_STRING);
     $fecha_nacimiento = $_POST['fecha_nacimiento'] ? $_POST['fecha_nacimiento'] : NULL;
     $fecha_ingreso = $_POST['fecha_ingreso'] ? $_POST['fecha_ingreso'] : NULL;
     $rfc = filter_var($_POST['rfc'], FILTER_SANITIZE_STRING);
@@ -64,7 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt) {
             // Vincular parámetros
             $stmt->bind_param("ssssissssisss", 
-                            $cargo, 
+                            $cargo,
+                            $rol, 
                             $fecha_nacimiento, 
                             $fecha_ingreso, 
                             $rfc, 
@@ -128,6 +130,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <span class="label-text">Cargo</span>
                     </label>
                     <input type="text" name="cargo" class="input input-bordered" required>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Rol</span>
+                    </label>
+                    <select name="rol" class="select select-bordered" required>
+                        <option value="" disabled selected>Seleccione un rol</option>
+                        <option value="Empleado">Empleado</option>
+                        <option value="RRHH administrador">RRHH administrador</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
                 </div>
                 
                 <div class="form-control">
