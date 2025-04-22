@@ -1,0 +1,47 @@
+# Archivos y carpetas del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración del IDE/Editor
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de dependencias y paquetes
+/vendor/
+/node_modules/
+composer.lock
+package-lock.json
+
+# Archivos de configuración sensibles
+config.php
+*.env
+
+# Archivos de caché y logs
+*.log
+/logs/
+/cache/
+/temp/
+
+# Archivos subidos por usuarios
+/uploads/
+/public/uploads/
+
+# Archivos de respaldo
+*.bak
+*.swp
+*~
+
+# Archivos de base de datos
+*.sql
+*.sqlite
+*.db
+
+# Archivos compilados
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so 

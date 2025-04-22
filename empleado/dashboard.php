@@ -9,7 +9,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Empleado') {
 
 require_once '../config/config.php';
 
-$pageTitle = "Panel de trabajador - El Agreval";
+$pageTitle = "Panel de Empleado - El Agreval";
 
 include '../includes/header.php';
 
@@ -21,32 +21,66 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8");
 
-$registros_por_pagina = 10;
-$pagina_actual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1;
-$offset = ($pagina_actual - 1) * $registros_por_pagina;
-
-$total_query = "SELECT COUNT(*) as total FROM EMPLEADOS";
-$total_result = $conn->query($total_query);
-$total_row = $total_result->fetch_assoc();
-$total_empleados = $total_row['total'];
-$total_paginas = ceil($total_empleados / $registros_por_pagina);
-
-$sql = "SELECT e.id_empleado, e.cargo, e.correo, e.nickname, e.estado_activo, 
-               e.telefono_personal, e.fecha_ingreso_escuela, d.nombre_departamento 
+// Obtener datos del empleado actual
+$id_empleado = $_SESSION['id_empleado'];
+$sql = "SELECT e.cargo, e.nickname, e.correo, e.telefono_personal, 
+               DATE(e.fecha_ingreso_escuela) as fecha_ingreso, d.nombre_departamento 
         FROM EMPLEADOS e
         LEFT JOIN DEPARTAMENTO d ON e.id_departamento = d.id_departamento
-        ORDER BY e.id_empleado
-        LIMIT $offset, $registros_por_pagina";
+        WHERE e.id_empleado = ?";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id_empleado);
+$stmt->execute();
+$result = $stmt->get_result();
+$empleado = $result->fetch_assoc();
+
+// Contar incapacidades pendientes
+$sql_pendientes = "SELECT COUNT(*) as total FROM INCAPACIDADES WHERE id_empleado = ? AND estado_aprobacion = 'pendiente'";
+$stmt_pendientes = $conn->prepare($sql_pendientes);
+$stmt_pendientes->bind_param("i", $id_empleado);
+$stmt_pendientes->execute();
+$result_pendientes = $stmt_pendientes->get_result();
+$pendientes = $result_pendientes->fetch_assoc()['total'];
+
+// Contar incapacidades activas
+$sql_activas = "SELECT COUNT(*) as total 
+                FROM INCAPACIDADES 
+                WHERE id_empleado = ? 
+                AND estado = 1 
+                AND estado_aprobacion = 'aprobada'
+                AND fecha_finalizacion >= CURDATE()";
+
+$stmt_activas = $conn->prepare($sql_activas);
+$stmt_activas->bind_param("i", $id_empleado);
+$stmt_activas->execute();
+$result_activas = $stmt_activas->get_result();
+$incapacidades_activas = $result_activas->fetch_assoc();
+$stmt_activas->close();
+
+// Obtener lista de incapacidades activas para mostrar
+$sql_lista_activas = "SELECT i.*, d.nombre_departamento 
+                      FROM INCAPACIDADES i
+                      JOIN EMPLEADOS e ON i.id_empleado = e.id_empleado
+                      LEFT JOIN DEPARTAMENTO d ON e.id_departamento = d.id_departamento
+                      WHERE i.id_empleado = ? 
+                      AND i.estado = 1 
+                      AND i.estado_aprobacion = 'aprobada'
+                      AND i.fecha_finalizacion >= CURDATE()
+                      ORDER BY i.fecha_inicio DESC";
+
+$stmt_lista_activas = $conn->prepare($sql_lista_activas);
+$stmt_lista_activas->bind_param("i", $id_empleado);
+$stmt_lista_activas->execute();
+$result_lista_activas = $stmt_lista_activas->get_result();
 ?>
 
 <div class="container mx-auto px-4 py-8">
     <!-- Encabezado del Dashboard -->
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">Panel de Administración - Gestión de Empleados</h1>
+        <h1 class="text-2xl font-bold">Panel de Empleado</h1>
         <div class="flex items-center space-x-4">
-            <span class="text-sm">Bienvenido, <?php echo htmlspecialchars($_SESSION['nickname']); ?></span>
+            <span class="text-sm">Bienvenido, <?php echo htmlspecialchars($empleado['nickname']); ?></span>
             <a href="../logout.php" class="btn btn-sm">Cerrar Sesión</a>
         </div>
     </div>
@@ -62,133 +96,73 @@ $result = $conn->query($sql);
         </div>
     <?php endif; ?>
     
-    <!-- Botón para crear nuevo empleado -->
-    <div class="mb-6">
-        <a href="crear_empleado.php" class="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-            </svg>
-            Nuevo Empleado
-        </a>
-    </div>
-    
-    <!-- Tabla de empleados -->
-    <div class="overflow-x-auto bg-base-100 shadow-xl rounded-lg">
-        <table class="table w-full">
-            <!-- Encabezado de la tabla -->
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Cargo</th>
-                    <th>Departamento</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Fecha Ingreso</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                if ($result->num_rows > 0) {
-                    $fila_alterna = true;
-                    while($row = $result->fetch_assoc()) {
-                        $clase_fila = $fila_alterna ? 'bg-base-200' : '';
-                        $estado_texto = $row['estado_activo'] ? 'Activo' : 'Inactivo';
-                        $estado_clase = $row['estado_activo'] ? 'text-success' : 'text-error';
-                ?>
-                <tr class="<?php echo $clase_fila; ?>">
-                    <th><?php echo $row['id_empleado']; ?></th>
-                    <td><?php echo htmlspecialchars($row['nickname']); ?></td>
-                    <td><?php echo htmlspecialchars($row['cargo']); ?></td>
-                    <td><?php echo htmlspecialchars($row['nombre_departamento'] ?? 'Sin departamento'); ?></td>
-                    <td><?php echo htmlspecialchars($row['correo']); ?></td>
-                    <td><?php echo htmlspecialchars($row['telefono_personal'] ?? 'No disponible'); ?></td>
-                    <td><?php echo $row['fecha_ingreso_escuela'] ? date('d/m/Y', strtotime($row['fecha_ingreso_escuela'])) : 'No disponible'; ?></td>
-                    <td class="<?php echo $estado_clase; ?>"><?php echo $estado_texto; ?></td>
-                    <td class="flex space-x-2">
-                        <a href="modificar_empleado.php?id=<?php echo $row['id_empleado']; ?>" class="btn btn-ghost btn-sm">
-                            Editar
-                        </a>
-                        <?php if ($row['estado_activo']): ?>
-                        <a href="cambiar_estado.php?id=<?php echo $row['id_empleado']; ?>&accion=baja" class="btn btn-ghost btn-sm text-error" 
-                           onclick="return confirm('¿Estás seguro de dar de baja a este empleado?');">
-                            Dar Baja
-                        </a>
-                        <?php else: ?>
-                        <a href="cambiar_estado.php?id=<?php echo $row['id_empleado']; ?>&accion=alta" class="btn btn-ghost btn-sm text-success">
-                            Activar
-                        </a>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <?php 
-                        $fila_alterna = !$fila_alterna;
-                    }
-                } else {
-                ?>
-                <tr>
-                    <td colspan="9" class="text-center py-4">No se encontraron empleados</td>
-                </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- Paginación -->
-    <?php if ($total_paginas > 1): ?>
-    <div class="flex justify-center mt-6">
-        <div class="btn-group">
-            <?php if ($pagina_actual > 1): ?>
-            <a href="?pagina=<?php echo ($pagina_actual - 1); ?>" class="btn">«</a>
-            <?php else: ?>
-            <button class="btn btn-disabled">«</button>
-            <?php endif; ?>
-            
-            <?php
-            // Determinar qué páginas mostrar
-            $inicio = max(1, $pagina_actual - 2);
-            $fin = min($total_paginas, $pagina_actual + 2);
-            
-            // Mostrar primera página si no está en el rango
-            if ($inicio > 1) {
-                echo '<a href="?pagina=1" class="btn">1</a>';
-                if ($inicio > 2) {
-                    echo '<button class="btn btn-disabled">...</button>';
-                }
-            }
-            
-            // Mostrar páginas del rango
-            for ($i = $inicio; $i <= $fin; $i++) {
-                if ($i == $pagina_actual) {
-                    echo '<button class="btn btn-active">' . $i . '</button>';
-                } else {
-                    echo '<a href="?pagina=' . $i . '" class="btn">' . $i . '</a>';
-                }
-            }
-            
-            // Mostrar última página si no está en el rango
-            if ($fin < $total_paginas) {
-                if ($fin < $total_paginas - 1) {
-                    echo '<button class="btn btn-disabled">...</button>';
-                }
-                echo '<a href="?pagina=' . $total_paginas . '" class="btn">' . $total_paginas . '</a>';
-            }
-            ?>
-            
-            <?php if ($pagina_actual < $total_paginas): ?>
-            <a href="?pagina=<?php echo ($pagina_actual + 1); ?>" class="btn">»</a>
-            <?php else: ?>
-            <button class="btn btn-disabled">»</button>
-            <?php endif; ?>
+    <!-- Información del empleado -->
+    <div class="bg-base-100 shadow-xl rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-4">Mi Información</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <p><span class="font-bold">Nombre:</span> <?php echo htmlspecialchars($empleado['nickname']); ?></p>
+                <p><span class="font-bold">Cargo:</span> <?php echo htmlspecialchars($empleado['cargo']); ?></p>
+                <p><span class="font-bold">Departamento:</span> <?php echo htmlspecialchars($empleado['nombre_departamento'] ?? 'No asignado'); ?></p>
+            </div>
+            <div>
+                <p><span class="font-bold">Correo:</span> <?php echo htmlspecialchars($empleado['correo']); ?></p>
+                <p><span class="font-bold">Teléfono:</span> <?php echo htmlspecialchars($empleado['telefono_personal'] ?? 'No disponible'); ?></p>
+                <p><span class="font-bold">Fecha de Ingreso:</span> <?php echo $empleado['fecha_ingreso'] ? date('d/m/Y', strtotime($empleado['fecha_ingreso'])) : 'No disponible'; ?></p>
+            </div>
         </div>
     </div>
-    <?php endif; ?>
+    
+    <!-- Menú rápido de incapacidades -->
+    <h2 class="text-xl font-semibold mb-4">Gestión de Incapacidades</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Solicitar Incapacidad</h2>
+                <p>Registra una nueva solicitud de incapacidad</p>
+                <div class="card-actions justify-end">
+                    <a href="solicitar_incapacidad.php" class="btn btn-primary">Solicitar</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Mis Incapacidades</h2>
+                <p>Revisa todas tus solicitudes de incapacidad</p>
+                <div class="card-actions justify-end">
+                    <a href="mis_incapacidades.php" class="btn btn-primary">Ver todas</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Estado de Solicitudes</h2>
+                <div class="flex justify-around my-2">
+                    <div class="text-center">
+                        <div class="badge badge-warning badge-lg"><?php echo $pendientes; ?></div>
+                        <p class="text-sm mt-1">Pendientes</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="badge badge-success badge-lg"><?php echo $incapacidades_activas['total']; ?></div>
+                        <p class="text-sm mt-1">Aprobadas Activas</p>
+                    </div>
+                </div>
+                <div class="card-actions justify-end">
+                    <a href="mis_incapacidades.php" class="btn btn-ghost btn-sm">Ver detalles</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php
 // Cerrar conexión
+$stmt->close();
+$stmt_pendientes->close();
+$stmt_activas->close();
+$stmt_lista_activas->close();
 $conn->close();
 
 // Incluir el pie de página común
