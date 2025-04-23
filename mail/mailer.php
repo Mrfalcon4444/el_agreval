@@ -1,12 +1,12 @@
 <?php
 // Intentar cargar los archivos de PHPMailer desde diferentes ubicaciones posibles
 $phpmailer_paths = [
-    // Ruta relativa estándar (funciona en local)
+    // Ruta relativa simple desde la carpeta mail
+    __DIR__ . '/phpmailer/',
+    // Ruta relativa desde la raíz del proyecto
     __DIR__ . '/../vendor/phpmailer/phpmailer/src/',
-    // Ruta absoluta en Hostinger (según el error)
-    '/home/u390193918/domains/elagreval.icu/public_html/vendor/phpmailer/phpmailer/src/',
-    // Ruta alternativa por si PHPMailer está instalado globalmente
-    '/opt/alt/php82/usr/share/php/PHPMailer/'
+    // Ruta relativa alternativa (por si vendor está en otro nivel)
+    __DIR__ . '/../../vendor/phpmailer/phpmailer/src/'
 ];
 
 $phpmailer_loaded = false;
@@ -28,7 +28,7 @@ if (!$phpmailer_loaded) {
         echo "<li>$path</li>";
     }
     echo "</ul>";
-    echo "<p>Por favor, instale PHPMailer en el servidor usando Composer o suba manualmente los archivos al servidor.</p>";
+    echo "<p>Por favor, instale PHPMailer en la carpeta mail/phpmailer/ o en vendor/phpmailer/phpmailer/src/</p>";
     die();
 }
 
