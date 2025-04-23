@@ -14,13 +14,13 @@ function setupMailer(PHPMailer $mail) {
     $mail->isSMTP();
     $mail->Host = 'smtp.hostinger.com'; 
     $mail->SMTPAuth = true;
-    $mail->Username = 'tu_correo@gamil.com'; 
-    $mail->Password = 'tu_contraseña'; 
+    $mail->Username = 'juana.martinez0902@alumnos.udg.mx'; 
+    $mail->Password = 'L24828123#sistemas'; 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
     
     // Configurar el remitente
-    $mail->setFrom('tu_correo@gnmail.com', 'El Agreval'); // Mismo correo que arriba
+    $mail->setFrom('juana.martinez0902@alumnos.udg.mx', 'El Agreval'); // Mismo correo que arriba
     $mail->CharSet = 'UTF-8';
 }
 
