@@ -3,17 +3,33 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 function setupMailer(PHPMailer $mail) {
-    // Configurar el servidor SMTP
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';      // Servidor SMTP de Gmail
-    $mail->SMTPAuth = true;
-    $mail->Username = 'tu_correo@gmail.com';  // Tu dirección de Gmail
-    $mail->Password = 'abcd efgh ijkl mnop';  // Tu contraseña de aplicación de Gmail
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
+    // Detectar si estamos en entorno local o en producción
+    $is_local = in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1']) || 
+                strpos($_SERVER['SERVER_NAME'] ?? '', '.local') !== false || 
+                strpos($_SERVER['SERVER_NAME'] ?? '', '.test') !== false;
     
-    // Configurar el remitente
-    $mail->setFrom('tu_correo@gmail.com', 'El Agreval');
+    if ($is_local) {
+        // Configuración para entorno local
+        $mail->isSMTP();
+        $mail->Host = 'smtp.hostinger.com';  // Servidor SMTP de Hostinger
+        $mail->SMTPAuth = true;
+        $mail->Username = 'admin@elagreval.icu';  // Tu dirección de correo en Hostinger
+        $mail->Password = 'AdminElAgreval123+';  // Tu contraseña de correo en Hostinger
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        $mail->setFrom('admin@elagreval.icu', 'El Agreval (Local)');
+    } else {
+        // Configuración para entorno de producción (Hostinger)
+        $mail->isSMTP();
+        $mail->Host = 'smtp.hostinger.com';  // Servidor SMTP de Hostinger
+        $mail->SMTPAuth = true;
+        $mail->Username = 'admin@elagreval.icu';  // Tu dirección de correo en Hostinger
+        $mail->Password = 'AdminElAgreval123+';  // Tu contraseña de correo en Hostinger
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        $mail->setFrom('admin@elagreval.icu', 'El Agreval');
+    }
+    
     $mail->CharSet = 'UTF-8';
 }
 
