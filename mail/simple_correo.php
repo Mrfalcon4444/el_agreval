@@ -8,7 +8,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Destinatario - CAMBIA ESTO
-$destinatario = 'tuemail@ejemplo.com';
+$destinatario = 'einarfalcon@gmail.com';
 
 // Mensaje simple
 $asunto = 'Mensaje de prueba';
