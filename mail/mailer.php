@@ -1,8 +1,36 @@
 <?php
-// Cargar las clases directamente
-require_once __DIR__ . '/../vendor/phpmailer/phpmailer/src/Exception.php';
-require_once __DIR__ . '/../vendor/phpmailer/phpmailer/src/PHPMailer.php';
-require_once __DIR__ . '/../vendor/phpmailer/phpmailer/src/SMTP.php';
+// Intentar cargar los archivos de PHPMailer desde diferentes ubicaciones posibles
+$phpmailer_paths = [
+    // Ruta relativa estándar (funciona en local)
+    __DIR__ . '/../vendor/phpmailer/phpmailer/src/',
+    // Ruta absoluta en Hostinger (según el error)
+    '/home/u390193918/domains/elagreval.icu/public_html/vendor/phpmailer/phpmailer/src/',
+    // Ruta alternativa por si PHPMailer está instalado globalmente
+    '/opt/alt/php82/usr/share/php/PHPMailer/'
+];
+
+$phpmailer_loaded = false;
+foreach ($phpmailer_paths as $base_path) {
+    if (file_exists($base_path . 'Exception.php')) {
+        require_once $base_path . 'Exception.php';
+        require_once $base_path . 'PHPMailer.php';
+        require_once $base_path . 'SMTP.php';
+        $phpmailer_loaded = true;
+        break;
+    }
+}
+
+if (!$phpmailer_loaded) {
+    // Si no se puede cargar PHPMailer, mostramos información de depuración
+    echo "<h2>Error: No se pudo cargar PHPMailer</h2>";
+    echo "<p>Se intentó cargar desde las siguientes rutas:</p><ul>";
+    foreach ($phpmailer_paths as $path) {
+        echo "<li>$path</li>";
+    }
+    echo "</ul>";
+    echo "<p>Por favor, instale PHPMailer en el servidor usando Composer o suba manualmente los archivos al servidor.</p>";
+    die();
+}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
