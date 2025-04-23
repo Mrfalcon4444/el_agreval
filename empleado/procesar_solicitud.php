@@ -32,33 +32,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
         if (in_array($ext, $allowed)) {
-            // Crear directorio si no existe
-            $upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/el_Agreval/Untitled/uploads/incapacidades/';
+            // Definir la ruta base para los uploads
+            $base_upload_dir = dirname(dirname(__FILE__)) . '/uploads/incapacidades/';
             
-            // Asegurarse de que el directorio existe
-            if (!file_exists($upload_dir)) {
-                if (!mkdir($upload_dir, 0777, true)) {
-                    header("Location: solicitar_incapacidad.php?error=No se pudo crear el directorio de subida");
+            // Crear los directorios si no existen
+            if (!file_exists($base_upload_dir)) {
+                if (!mkdir($base_upload_dir, 0755, true)) {
+                    error_log("Error al crear el directorio: " . $base_upload_dir);
+                    header("Location: solicitar_incapacidad.php?error=Error al crear el directorio de subida");
                     exit();
                 }
             }
 
-            // Verificar permisos del directorio
-            if (!is_writable($upload_dir)) {
-                chmod($upload_dir, 0777);
-            }
+            // Asegurarse de que el directorio tenga los permisos correctos
+            chmod($base_upload_dir, 0755);
 
             // Generar nombre único para el archivo
             $new_filename = uniqid() . '_' . $id_empleado . '.' . $ext;
-            $full_path = $upload_dir . $new_filename;
-            $relative_path = 'uploads/incapacidades/' . $new_filename;
+            $full_path = $base_upload_dir . $new_filename;
 
             // Mover el archivo
             if (move_uploaded_file($_FILES['documento_medico']['tmp_name'], $full_path)) {
-                $documento_path = $relative_path;
+                // Guardar la ruta relativa en la base de datos
+                $documento_path = 'uploads/incapacidades/' . $new_filename;
+                
+                // Asegurarse de que el archivo tenga los permisos correctos
+                chmod($full_path, 0644);
             } else {
                 $error = error_get_last();
-                header("Location: solicitar_incapacidad.php?error=Error al subir el archivo: " . $error['message']);
+                error_log("Error al mover el archivo: " . $error['message']);
+                header("Location: solicitar_incapacidad.php?error=Error al subir el archivo");
                 exit();
             }
         } else {
@@ -77,6 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         header("Location: mis_incapacidades.php?mensaje=Incapacidad solicitada correctamente");
     } else {
+        error_log("Error al insertar en la base de datos: " . $stmt->error);
         header("Location: solicitar_incapacidad.php?error=Error al registrar la incapacidad: " . $stmt->error);
     }
 

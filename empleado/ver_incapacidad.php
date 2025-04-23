@@ -141,21 +141,28 @@ $stmt->close();
                     <?php if (!empty($incapacidad['documento_justificativo'])): ?>
                         <?php
                         $ext = strtolower(pathinfo($incapacidad['documento_justificativo'], PATHINFO_EXTENSION));
-                        if (in_array($ext, ['jpg', 'jpeg', 'png'])): ?>
-                            <img src="../<?php echo htmlspecialchars($incapacidad['documento_justificativo']); ?>" 
-                                 alt="Documento médico" 
-                                 class="max-w-full h-auto rounded-lg shadow-lg">
-                        <?php elseif ($ext == 'pdf'): ?>
-                            <div class="flex items-center space-x-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                </svg>
-                                <a href="../<?php echo htmlspecialchars($incapacidad['documento_justificativo']); ?>" 
-                                   target="_blank" 
-                                   class="link link-primary">
-                                    Ver documento PDF
-                                </a>
-                            </div>
+                        $doc_path = dirname(dirname(__FILE__)) . '/' . $incapacidad['documento_justificativo'];
+                        $web_path = '../' . $incapacidad['documento_justificativo'];
+                        
+                        if (file_exists($doc_path)):
+                            if (in_array($ext, ['jpg', 'jpeg', 'png'])): ?>
+                                <img src="<?php echo htmlspecialchars($web_path); ?>" 
+                                     alt="Documento médico" 
+                                     class="max-w-full h-auto rounded-lg shadow-lg">
+                            <?php elseif ($ext == 'pdf'): ?>
+                                <div class="flex items-center space-x-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                    <a href="<?php echo htmlspecialchars($web_path); ?>" 
+                                       target="_blank" 
+                                       class="link link-primary">
+                                        Ver documento PDF
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <p class="text-red-500">El archivo no se encuentra en el servidor</p>
                         <?php endif; ?>
                     <?php else: ?>
                         <p class="text-gray-500">No se ha subido ningún documento</p>
