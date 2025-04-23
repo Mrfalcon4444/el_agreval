@@ -2,13 +2,13 @@
 // Incluir el archivo de utilidades de correo
 require_once __DIR__ . '/mailer.php';
 
-// Para depuración, mostrar todos los errores
+// Para depuración, mostrar solo errores críticos
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ERROR);
 
 // Destinatario - CAMBIA ESTO
-$destinatario = 'einarfalcon@gmail.com';
+$destinatario = 'tuemail@ejemplo.com';
 
 // Mensaje simple
 $asunto = 'Mensaje de prueba';
@@ -21,8 +21,8 @@ try {
     // Configuración SMTP
     setupMailer($mail);
     
-    // Habilitar depuración SMTP
-    $mail->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+    // Desactivar depuración SMTP
+    $mail->SMTPDebug = 0; // Sin información de depuración
     
     // Destinatario
     $mail->addAddress($destinatario);
@@ -35,8 +35,8 @@ try {
     
     // Enviar
     $mail->send();
-    echo "Correo enviado con éxito a $destinatario";
+    echo "<h2 style='color:green;text-align:center;'>Enviado</h2>";
 } catch (Exception $e) {
-    echo "Error al enviar correo: " . $mail->ErrorInfo;
+    echo "<h2 style='color:red;text-align:center;'>Error</h2>";
 }
 ?> 
