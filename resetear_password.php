@@ -40,7 +40,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8");
 
 // Buscar el token en la base de datos
-$sql = "SELECT token, fecha_expiracion FROM recuperacion_password WHERE id_empleado = ?";
+$sql = "SELECT token_hash as token, expires_at as fecha_expiracion FROM password_resets WHERE id_empleado = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id_empleado);
 $stmt->execute();

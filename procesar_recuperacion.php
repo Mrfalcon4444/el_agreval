@@ -59,14 +59,14 @@ $hash_token = password_hash($token, PASSWORD_DEFAULT); // Almacenar el hash, no 
 $expiracion = date('Y-m-d H:i:s', strtotime('+24 hours'));
 
 // Eliminar tokens antiguos para este empleado
-$sql_delete = "DELETE FROM recuperacion_password WHERE id_empleado = ?";
+$sql_delete = "DELETE FROM password_resets WHERE id_empleado = ?";
 $stmt_delete = $conn->prepare($sql_delete);
 $stmt_delete->bind_param("i", $id_empleado);
 $stmt_delete->execute();
 $stmt_delete->close();
 
 // Insertar el nuevo token en la base de datos
-$sql_insert = "INSERT INTO recuperacion_password (id_empleado, token, fecha_expiracion) VALUES (?, ?, ?)";
+$sql_insert = "INSERT INTO password_resets (id_empleado, token_hash, expires_at) VALUES (?, ?, ?)";
 $stmt_insert = $conn->prepare($sql_insert);
 $stmt_insert->bind_param("iss", $id_empleado, $hash_token, $expiracion);
 
