@@ -8,25 +8,19 @@ function setupMailer(PHPMailer $mail) {
                 strpos($_SERVER['SERVER_NAME'] ?? '', '.local') !== false || 
                 strpos($_SERVER['SERVER_NAME'] ?? '', '.test') !== false;
     
+    // Configuración SMTP común
+    $mail->isSMTP();
+    $mail->Host = 'smtp.hostinger.com';  // Servidor SMTP de Hostinger
+    $mail->SMTPAuth = true;
+    $mail->Username = 'admin@elagreval.icu';  // Tu dirección de correo en Hostinger
+    $mail->Password = 'AdminElAgreval123+';  // Tu contraseña de correo en Hostinger
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
+    
+    // Diferenciar el remitente según el entorno
     if ($is_local) {
-        // Configuración para entorno local
-        $mail->isSMTP();
-        $mail->Host = 'smtp.hostinger.com';  // Servidor SMTP de Hostinger
-        $mail->SMTPAuth = true;
-        $mail->Username = 'admin@elagreval.icu';  // Tu dirección de correo en Hostinger
-        $mail->Password = 'AdminElAgreval123+';  // Tu contraseña de correo en Hostinger
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $mail->Port = 465;
         $mail->setFrom('admin@elagreval.icu', 'El Agreval (Local)');
     } else {
-        // Configuración para entorno de producción (Hostinger)
-        $mail->isSMTP();
-        $mail->Host = 'smtp.hostinger.com';  // Servidor SMTP de Hostinger
-        $mail->SMTPAuth = true;
-        $mail->Username = 'admin@elagreval.icu';  // Tu dirección de correo en Hostinger
-        $mail->Password = 'AdminElAgreval123+';  // Tu contraseña de correo en Hostinger
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
         $mail->setFrom('admin@elagreval.icu', 'El Agreval');
     }
     
