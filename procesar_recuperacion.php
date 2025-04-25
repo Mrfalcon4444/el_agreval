@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', 1); // Muestra errores en pantalla
+ini_set('display_startup_errors', 1); // Muestra errores de inicio de PHP
+error_reporting(E_ALL); // Reporta todos los tipos de errores y advertencias
+
+// El resto de tu código va aquí...
 require_once 'config/config.php';
 require_once 'includes/functions.php';
 require_once 'config/mail_config.php';
