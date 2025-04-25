@@ -58,6 +58,29 @@ $result_activas = $stmt_activas->get_result();
 $incapacidades_activas = $result_activas->fetch_assoc();
 $stmt_activas->close();
 
+// Contar vacaciones pendientes
+$sql_vac_pendientes = "SELECT COUNT(*) as total FROM VACACIONES WHERE id_empleado = ? AND estado_aprobacion = 'pendiente'";
+$stmt_vac_pendientes = $conn->prepare($sql_vac_pendientes);
+$stmt_vac_pendientes->bind_param("i", $id_empleado);
+$stmt_vac_pendientes->execute();
+$result_vac_pendientes = $stmt_vac_pendientes->get_result();
+$vac_pendientes = $result_vac_pendientes->fetch_assoc()['total'];
+
+// Contar vacaciones activas
+$sql_vac_activas = "SELECT COUNT(*) as total 
+                   FROM VACACIONES 
+                   WHERE id_empleado = ? 
+                   AND estado = 1 
+                   AND estado_aprobacion = 'aprobada'
+                   AND fecha_finalizacion >= CURDATE()";
+
+$stmt_vac_activas = $conn->prepare($sql_vac_activas);
+$stmt_vac_activas->bind_param("i", $id_empleado);
+$stmt_vac_activas->execute();
+$result_vac_activas = $stmt_vac_activas->get_result();
+$vacaciones_activas = $result_vac_activas->fetch_assoc();
+$stmt_vac_activas->close();
+
 // Obtener lista de incapacidades activas para mostrar
 $sql_lista_activas = "SELECT i.*, d.nombre_departamento 
                       FROM INCAPACIDADES i
@@ -155,6 +178,49 @@ $result_lista_activas = $stmt_lista_activas->get_result();
             </div>
         </div>
     </div>
+    
+    <!-- Menú rápido de vacaciones -->
+    <h2 class="text-xl font-semibold mb-4">Gestión de Vacaciones</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Solicitar Vacaciones</h2>
+                <p>Registra una nueva solicitud de vacaciones</p>
+                <div class="card-actions justify-end">
+                    <a href="solicitar_vacaciones.php" class="btn btn-primary">Solicitar</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Mis Vacaciones</h2>
+                <p>Revisa todas tus solicitudes de vacaciones</p>
+                <div class="card-actions justify-end">
+                    <a href="mis_vacaciones.php" class="btn btn-primary">Ver todas</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Estado de Solicitudes</h2>
+                <div class="flex justify-around my-2">
+                    <div class="text-center">
+                        <div class="badge badge-warning badge-lg"><?php echo $vac_pendientes; ?></div>
+                        <p class="text-sm mt-1">Pendientes</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="badge badge-success badge-lg"><?php echo $vacaciones_activas['total']; ?></div>
+                        <p class="text-sm mt-1">Aprobadas Activas</p>
+                    </div>
+                </div>
+                <div class="card-actions justify-end">
+                    <a href="mis_vacaciones.php" class="btn btn-ghost btn-sm">Ver detalles</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php
@@ -162,6 +228,8 @@ $result_lista_activas = $stmt_lista_activas->get_result();
 $stmt->close();
 $stmt_pendientes->close();
 $stmt_activas->close();
+$stmt_vac_pendientes->close();
+$stmt_vac_activas->close();
 $stmt_lista_activas->close();
 $conn->close();
 

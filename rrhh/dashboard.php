@@ -47,7 +47,7 @@ $sql = "SELECT e.id_empleado, e.cargo, e.correo, e.nickname, e.estado_activo,
 $result = $conn->query($sql);
 
 // Obtener estadísticas de vacaciones pendientes
-$vacaciones_query = "SELECT COUNT(*) as pendientes FROM VACACIONES WHERE estado = 0";
+$vacaciones_query = "SELECT COUNT(*) as pendientes FROM VACACIONES WHERE estado_aprobacion = 'pendiente'";
 $vacaciones_result = $conn->query($vacaciones_query);
 $vacaciones_pendientes = $vacaciones_result->fetch_assoc()['pendientes'];
 
