@@ -136,7 +136,7 @@ $incapacidades_activas = $incapacidades_result->fetch_assoc()['total'];
             </svg>
             Gestionar Vacaciones
         </a>
-        <a href="nomina/index.php" class="btn btn-accent">
+        <a href="../nomina/rrhh/index.php" class="btn btn-accent">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
             </svg>
@@ -192,7 +192,7 @@ $incapacidades_activas = $incapacidades_result->fetch_assoc()['total'];
                             <label tabindex="0" class="btn btn-sm m-1">Acciones</label>
                             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                                 <li><a href="modificar_empleado.php?id=<?php echo $row['id_empleado']; ?>">Editar Información</a></li>
-                                <li><a href="nomina/gestionar.php?id=<?php echo $row['id_empleado']; ?>">Gestionar Nómina</a></li>
+                                <li><a href="../nomina/rrhh/generar_nomina.php?id=<?php echo $row['id_empleado']; ?>">Gestionar Nómina</a></li>
                                 <li><a href="vacaciones/solicitudes.php?id=<?php echo $row['id_empleado']; ?>">Ver Vacaciones</a></li>
                                 <li><a href="incapacidades/gestionar.php?id=<?php echo $row['id_empleado']; ?>">Gestionar Incapacidades</a></li>
                                 <?php if ($row['estado_activo']): ?>

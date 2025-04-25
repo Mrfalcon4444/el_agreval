@@ -221,6 +221,54 @@ $result_lista_activas = $stmt_lista_activas->get_result();
             </div>
         </div>
     </div>
+    
+    <!-- Menú de nómina -->
+    <h2 class="text-xl font-semibold mb-4">Nómina</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Mis Nóminas</h2>
+                <p>Consulta tus recibos de nómina y visualiza tu historial de pagos</p>
+                <div class="card-actions justify-end">
+                    <a href="../nomina/empleado/index.php" class="btn btn-primary">Ver nóminas</a>
+                </div>
+            </div>
+        </div>
+        
+        <?php
+        // Obtener la última nómina del empleado
+        $sql_ultima_nomina = "SELECT fecha_pago, salario_neto, pdf_ruta FROM NOMINAS 
+                             WHERE id_empleado = ? 
+                             ORDER BY fecha_pago DESC 
+                             LIMIT 1";
+        $stmt_ultima_nomina = $conn->prepare($sql_ultima_nomina);
+        $stmt_ultima_nomina->bind_param("i", $id_empleado);
+        $stmt_ultima_nomina->execute();
+        $result_ultima_nomina = $stmt_ultima_nomina->get_result();
+        $ultima_nomina = $result_ultima_nomina->fetch_assoc();
+        $stmt_ultima_nomina->close();
+        ?>
+        
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Último Pago</h2>
+                <?php if ($ultima_nomina): ?>
+                <div class="my-2">
+                    <p><span class="font-bold">Fecha:</span> <?php echo date('d/m/Y', strtotime($ultima_nomina['fecha_pago'])); ?></p>
+                    <p><span class="font-bold">Monto Neto:</span> $<?php echo number_format($ultima_nomina['salario_neto'], 2); ?></p>
+                </div>
+                <div class="card-actions justify-end">
+                    <?php if ($ultima_nomina['pdf_ruta']): ?>
+                    <a href="<?php echo '../' . $ultima_nomina['pdf_ruta']; ?>" target="_blank" class="btn btn-outline btn-sm">Ver recibo</a>
+                    <?php endif; ?>
+                    <a href="../nomina/empleado/index.php" class="btn btn-ghost btn-sm">Ver historial</a>
+                </div>
+                <?php else: ?>
+                <p>No hay información de pagos disponible</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php
