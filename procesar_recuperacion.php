@@ -6,7 +6,8 @@ error_reporting(E_ALL); // Reporta todos los tipos de errores y advertencias
 // El resto de tu código va aquí...
 require_once 'config/config.php';
 require_once 'includes/functions.php';
-require_once 'config/mail_config.php';
+require_once 'phpmailer/mailer.php';
+
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
