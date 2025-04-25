@@ -15,8 +15,8 @@ function setupMailer(PHPMailer $mail) {
         $mail->SMTPAuth = true;
         $mail->Username = 'admin@elagreval.icu';  // Tu dirección de correo en Hostinger
         $mail->Password = 'AdminElAgreval123+';  // Tu contraseña de correo en Hostinger
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port = 465;
         $mail->setFrom('admin@elagreval.icu', 'El Agreval (Local)');
     } else {
         // Configuración para entorno de producción (Hostinger)
