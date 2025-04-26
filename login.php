@@ -86,7 +86,14 @@ include 'includes/header.php';
             this.querySelector('svg').classList.toggle('text-primary');
           });
         });
-      
+        </script>
+          <label class="input validator">
+              </g>
+            </svg>
+            <input type="password" name="contraseña" required placeholder="Contraseña" class="text-center" />
+          </label>
+        </div>
+        
         <div class="flex justify-between items-center w-full max-w-xs">
           <label class="label cursor-pointer">
             <input type="checkbox" name="remember" class="checkbox checkbox-primary mr-2" />
