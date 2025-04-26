@@ -55,7 +55,7 @@ include 'includes/header.php';
           <div class="relative">
           <label class="input validator">
             <!-- Ícono de la llave a la izquierda -->
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <span class="absolute inset-y-0 right-0 flex items-center pl-3">
               <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
                 <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
@@ -66,7 +66,7 @@ include 'includes/header.php';
             <input type="password" name="contraseña" id="password" required placeholder="Contraseña" class="input input-bordered w-full pl-10 pr-10 bg-white" />
 
             <!-- Botón del ojito a la derecha -->
-            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center pr-3">
+            <button type="button" id="togglePassword" class="absolute inset-y-0 left-0 flex items-center pr-3">
               <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-[1em] opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.662-1.194 2.382" />
