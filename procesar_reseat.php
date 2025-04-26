@@ -48,7 +48,7 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8");
 
 // Verificar la validez del token
-$sql = "SELECT token, fecha_expiracion FROM recuperacion_password WHERE id_empleado = ?";
+$sql = "SELECT token, fecha_expiracion FROM password_resets WHERE id_empleado = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id_empleado);
 $stmt->execute();
@@ -102,7 +102,7 @@ if (!$stmt_update->execute()) {
 $stmt_update->close();
 
 // Eliminar todos los tokens de recuperación para este empleado
-$sql_delete = "DELETE FROM recuperacion_password WHERE id_empleado = ?";
+$sql_delete = "DELETE FROM password_resets WHERE id_empleado = ?";
 $stmt_delete = $conn->prepare($sql_delete);
 $stmt_delete->bind_param("i", $id_empleado);
 $stmt_delete->execute();
