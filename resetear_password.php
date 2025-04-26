@@ -95,7 +95,7 @@ if (!$token_valido) {
       </div>
       <?php endif; ?>
       
-      <form action="procesar_reset.php" method="POST" class="space-y-6 flex flex-col items-center" id="reset-form">
+      <form action="procesar_reseat.php" method="POST" class="space-y-6 flex flex-col items-center" id="reset-form">
         <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
         <input type="hidden" name="id_empleado" value="<?php echo htmlspecialchars($id_empleado); ?>">
         
