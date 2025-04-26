@@ -47,7 +47,6 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8");
 
-<?php
 // Verificar la validez del token
 $sql = "SELECT token_hash, expires_at, used_at FROM password_resets WHERE id_empleado = ?";
 $stmt = $conn->prepare($sql);
