@@ -119,18 +119,32 @@ try {
         $mail->isHTML(true);
         $mail->Subject = 'Recuperación de Contraseña - El Agreval';
         
-        // Plantilla HTML mejorada
-        $mail->Body = "
+      
+        $mail->addEmbeddedImage(__DIR__ . '/imagenes/logo.png', 'logo_cid');
+
+        // Actualizar el cuerpo del mensaje para usar el logo embebido
+        $mail->Body = '
         <html>
-        <body style='font-family: Arial, sans-serif;'>
-            <h2 style='color: #2c3e50;'>Hola $nickname,</h2>
-            <p>Hemos recibido una solicitud para restablecer tu contraseña.</p>
-            <p>Por favor haz clic en el siguiente enlace:</p>
-            <p><a href='$reset_url' style='background-color: #3498db; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;'>Restablecer Contraseña</a></p>
-            <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
-            <p><small>Este enlace expirará en 24 horas.</small></p>
-        </body>
-        </html>";
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="cid:logo_cid" alt="El Agreval" style="max-width: 150px;">
+                    </div>
+                    <h2 style="color: #2c3e50; text-align: center;">Restablecimiento de Contraseña</h2>
+                    <p>Hola <strong>' . htmlspecialchars($nickname) . '</strong>,</p>
+                    <p>Hemos recibido una solicitud para restablecer tu contraseña en <strong>El Agreval</strong>.</p>
+                    <p>Para continuar con el proceso, haz clic en el siguiente botón:</p>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <a href="' . htmlspecialchars($reset_url) . '" style="display: inline-block; background-color: #3498db; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">Restablecer Contraseña</a>
+                    </div>
+                    <p>Si no solicitaste este cambio, puedes ignorar este mensaje. Tu contraseña actual seguirá siendo válida.</p>
+                    <p style="color: #888; font-size: 14px;">Este enlace es válido por 24 horas. Si tienes problemas para acceder, copia y pega el siguiente enlace en tu navegador:</p>
+                    <p style="word-break: break-word; color: #555; font-size: 14px;">' . htmlspecialchars($reset_url) . '</p>
+                    <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                    <p style="text-align: center; font-size: 12px; color: #aaa;">Este mensaje fue enviado automáticamente por <strong>El Agreval</strong>. Por favor, no respondas a este correo.</p>
+                </div>
+            </body>
+        </html>';
         
         $mail->AltBody = "Hola $nickname,\n\nPara restablecer tu contraseña, visita:\n$reset_url\n\nEste enlace expira en 24 horas.";
         $reset_url = getBaseUrl()."/resetear_password.php?token=".urlencode($token)."&id=".$id_empleado;
