@@ -47,8 +47,9 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8");
 
+<?php
 // Verificar la validez del token
-$sql = "SELECT token, fecha_expiracion FROM password_resets WHERE id_empleado = ?";
+$sql = "SELECT token_hash, expires_at, used_at FROM password_resets WHERE id_empleado = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id_empleado);
 $stmt->execute();
@@ -61,15 +62,19 @@ if ($result->num_rows === 0) {
     $mensaje_error = "El enlace de recuperación es inválido o ha expirado.";
 } else {
     $row = $result->fetch_assoc();
-    $fecha_expiracion = new DateTime($row['fecha_expiracion']);
+    $fecha_expiracion = new DateTime($row['expires_at']);
     $ahora = new DateTime();
     
     // Verificar si el token ha expirado
     if ($ahora > $fecha_expiracion) {
         $mensaje_error = "El enlace de recuperación ha expirado. Solicita uno nuevo.";
     } 
+    // Verificar si el token ya fue usado
+    elseif (!is_null($row['used_at'])) {
+        $mensaje_error = "El enlace de recuperación ya ha sido utilizado.";
+    }
     // Verificar si el token coincide
-    elseif (!password_verify($token, $row['token'])) {
+    elseif (!password_verify($token, $row['token_hash'])) {
         $mensaje_error = "El enlace de recuperación es inválido.";
     } else {
         $token_valido = true;
@@ -101,12 +106,12 @@ if (!$stmt_update->execute()) {
 
 $stmt_update->close();
 
-// Eliminar todos los tokens de recuperación para este empleado
-$sql_delete = "DELETE FROM password_resets WHERE id_empleado = ?";
-$stmt_delete = $conn->prepare($sql_delete);
-$stmt_delete->bind_param("i", $id_empleado);
-$stmt_delete->execute();
-$stmt_delete->close();
+// Marcar el token como usado
+$sql_update_token = "UPDATE password_resets SET used_at = NOW() WHERE id_empleado = ? AND token_hash = ?";
+$stmt_update_token = $conn->prepare($sql_update_token);
+$stmt_update_token->bind_param("is", $id_empleado, $row['token_hash']);
+$stmt_update_token->execute();
+$stmt_update_token->close();
 
 $conn->close();
 
