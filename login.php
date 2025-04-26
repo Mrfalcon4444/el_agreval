@@ -49,6 +49,33 @@ include 'includes/header.php';
           <label class="label flex justify-center">
             <span class="label-text">Contraseña</span>
           </label>
+          <div class="relative">
+            <input type="password" name="contraseña" id="password" required placeholder="Contraseña" class="text-center w-full pr-10" />
+            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center px-2">
+              <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.662-1.194 2.382" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const togglePassword = document.getElementById('togglePassword');
+          const passwordInput = document.getElementById('password');
+
+          togglePassword.addEventListener('click', function() {
+            // Alternar el tipo de input entre 'password' y 'text'
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Cambiar el ícono del ojo
+            this.querySelector('svg').classList.toggle('text-gray-500');
+            this.querySelector('svg').classList.toggle('text-primary');
+          });
+        });
+        </script>
           <label class="input validator">
             <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
