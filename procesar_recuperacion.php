@@ -133,7 +133,12 @@ try {
         </html>";
         
         $mail->AltBody = "Hola $nickname,\n\nPara restablecer tu contraseña, visita:\n$reset_url\n\nEste enlace expira en 24 horas.";
+        $reset_url = getBaseUrl()."/resetear_password.php?token=".urlencode($token)."&id=".$id_empleado;
 
+        error_log("URL de reseteo generada: " . $reset_url); // <-- AÑADE ESTA LÍNEA
+
+        $mail->isHTML(true);
+ 
         $mail->send();
         
         header("Location: recuperar_password.php?mensaje=Si tu correo está registrado, recibirás un enlace para restablecer tu contraseña.&tipo=success");
