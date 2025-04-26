@@ -104,7 +104,7 @@ try {
         $mail->Host = 'smtp.hostinger.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'admin@elagreval.icu';
-        $mail->Password = 'tu_contraseña_smtp';
+        $mail->Password = 'AdminElAgreval123+';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
         $mail->CharSet = 'UTF-8';
