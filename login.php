@@ -52,6 +52,7 @@ include 'includes/header.php';
           <label class="label">
             <span class="label-text">Contraseña</span>
           </label>
+
           <div class="relative">
           <label class="input validator">
             <!-- Ícono de la llave a la izquierda -->
@@ -77,6 +78,20 @@ include 'includes/header.php';
 
         <!-- Recordarme y enlace -->
         <div class="flex justify-between items-center">
+
+          <label class="input validator">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
+                <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+              </g>
+            </svg>
+            <input type="password" name="contraseña" required placeholder="Contraseña" class="text-center" />
+          </label>
+        </div>
+        
+        <div class="flex justify-between items-center w-full max-w-xs">
+
           <label class="label cursor-pointer">
             <input type="checkbox" name="remember" class="checkbox checkbox-primary mr-2" />
             <span class="label-text">Recordarme</span>
