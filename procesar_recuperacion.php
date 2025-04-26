@@ -14,9 +14,9 @@ require_once 'includes/functions.php';
 // Carga flexible de PHPMailer (versión mejorada)
 $phpmailerLoaded = false;
 $pathsToCheck = [
-    __DIR__.'/mail/phpmailer/src/',  // Estructura estándar recomendada
-    __DIR__.'/phpmailer/src/',       // Ubicación alternativa
-    __DIR__.'/vendor/phpmailer/phpmailer/src/' // Si usas Composer
+    __DIR__.'/mail/phpmailer/',  
+    __DIR__.'/phpmailer/src/',      
+    __DIR__.'/vendor/phpmailer/phpmailer/src/' 
 ];
 
 foreach ($pathsToCheck as $path) {
