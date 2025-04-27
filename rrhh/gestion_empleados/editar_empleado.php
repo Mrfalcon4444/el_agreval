@@ -6,9 +6,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
     die("Acceso denegado");
 }
 
-$pageTitle = "Panel de Administración - El Agreval";
+$pageTitle = "Editar Empleados - El Agreval";
 
-include '../includes/header.php';
+include '../../includes/header.php';
 
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
@@ -494,5 +494,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 
 // Incluir el pie de página común
-include '../includes/footer.php';
+include '../../includes/footer.php';
 ?>

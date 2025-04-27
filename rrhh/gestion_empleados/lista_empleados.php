@@ -11,11 +11,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
 }
 
 
-require_once '../config/config.php';
+require_once '../../config/config.php';
 
-$pageTitle = "Editar Empleados - El Agreval";
+$pageTitle = "Empleados - El Agreval";
 
-include '../includes/header.php';
+include '../../includes/header.php';
 
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
@@ -189,5 +189,5 @@ $result = $conn->query($sql);
 $conn->close();
 
 // Incluir el pie de página común
-include '../includes/footer.php';
+include '../../includes/footer.php';
 ?>
