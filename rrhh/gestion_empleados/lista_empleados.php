@@ -106,7 +106,7 @@ $result = $conn->query($sql);
                     <td class="<?php echo $estado_clase; ?>"><?php echo $estado_texto; ?></td>
                     <td class="flex space-x-2">
                         
-                        <a href="gestion_empleados/editar_empleado.php?id=<?php echo $row['id_empleado']; ?>" class="btn btn-ghost btn-sm">
+                        <a href="/rrhh/gestion_empleados/editar_empleado.php?id=<?php echo $row['id_empleado']; ?>" class="btn btn-ghost btn-sm">
                             Editar
                         </a>
                         <?php if ($row['estado_activo']): ?>
