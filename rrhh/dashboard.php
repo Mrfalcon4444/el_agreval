@@ -124,9 +124,9 @@ $incapacidades_activas = $incapacidades_result->fetch_assoc()['total'];
     
     <!-- Botones de acción -->
     <div class="flex flex-wrap gap-4 mb-6">
-        <a href="vacaciones/index.php" class="btn btn-secondary">
+        <a href="../admin/modificar_empleado.php" class="btn btn-warning">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/>
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
             </svg>
             Editar Empleado
         </a>
