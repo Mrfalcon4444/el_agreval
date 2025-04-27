@@ -37,40 +37,40 @@ include 'includes/header.php';
             <span class="label-text">Correo Electrónico</span>
           </label>
           <div class="relative">
-          <label class="input validator">
-            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              <svg class="h-5 w-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor">
+                  <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                </g>
               </svg>
             </span>
             <input type="email" name="correo" placeholder="correo@ejemplo.com" required class="input input-bordered w-full pl-10" />
           </div>
         </div>
 
+        <!-- Campo de contraseña -->
         <div class="form-control w-full">
           <label class="label">
             <span class="label-text">Contraseña</span>
           </label>
-
           <div class="relative">
-          <label class="input validator">
-            <!-- Ícono de la llave a la izquierda -->
-            <span class="absolute inset-y-0 right-0 flex items-center pl-3">
-              <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <!-- Ícono de llave a la izquierda -->
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              <svg class="h-5 w-5 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
                 <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
               </svg>
             </span>
-
+            
             <!-- Campo de contraseña -->
-            <input type="password" name="contraseña" id="password" required placeholder="Contraseña" class="input input-bordered w-full pl-10 pr-10 bg-white" />
-
+            <input type="password" name="contraseña" id="password" required placeholder="Contraseña" class="input input-bordered w-full pl-10 pr-10" />
+            
             <!-- Botón del ojito a la derecha -->
-            <button type="button" id="togglePassword" class="absolute inset-y-0 left-0 flex items-center pr-3">
-              <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-[1em] opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.662-1.194 2.382" />
+            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.662-1.194 2.382" />
               </svg>
             </button>
           </div>
@@ -78,20 +78,6 @@ include 'includes/header.php';
 
         <!-- Recordarme y enlace -->
         <div class="flex justify-between items-center">
-
-          <label class="input validator">
-            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-                <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
-                <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-              </g>
-            </svg>
-            <input type="password" name="contraseña" required placeholder="Contraseña" class="text-center" />
-          </label>
-        </div>
-        
-        <div class="flex justify-between items-center w-full max-w-xs">
-
           <label class="label cursor-pointer">
             <input type="checkbox" name="remember" class="checkbox checkbox-primary mr-2" />
             <span class="label-text">Recordarme</span>
@@ -104,9 +90,6 @@ include 'includes/header.php';
           <button type="submit" class="btn btn-primary w-full">Iniciar Sesión</button>
         </div>
       </form>
-    </div>
-  </div>
-</div>
 
       <div class="text-center mt-6 text-sm">
         <p>Si no tienes una cuenta, contacta al administrador del sistema.</p>
@@ -119,17 +102,21 @@ include 'includes/header.php';
 document.addEventListener('DOMContentLoaded', function() {
   const togglePassword = document.getElementById('togglePassword');
   const passwordInput = document.getElementById('password');
+  const eyeIcon = document.getElementById('eyeIcon');
 
   togglePassword.addEventListener('click', function() {
     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordInput.setAttribute('type', type);
-    this.querySelector('svg').classList.toggle('text-gray-400');
-    this.querySelector('svg').classList.toggle('text-primary');
+    
+    // Cambiar el ícono del ojo
+    if (type === 'text') {
+      eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />';
+    } else {
+      eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.274.857-.68 1.662-1.194 2.382" />';
+    }
   });
 });
 </script>
-      
-      
 
 <?php
 include 'includes/footer.php';
