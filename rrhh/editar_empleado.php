@@ -2,10 +2,8 @@
 // Iniciar sesión
 session_start();
 
-// Verificar si el usuario está logueado y es administrador
-if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Administrador' ) {
-    header("Location: ../login.php");
-    exit();
+if (!isset($_SESSION['usuario']) || ($_SESSION['rol'] !== 'admin' && $_SESSION['rol'] !== 'rrhh')) {
+    die("Acceso denegado");
 }
 
 // Incluir archivo de configuración
