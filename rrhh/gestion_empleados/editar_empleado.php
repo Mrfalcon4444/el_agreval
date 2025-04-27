@@ -305,7 +305,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             
             <div class="flex justify-end space-x-4">
-                <a href="dashboard.php" class="btn btn-ghost">Cancelar</a>
+                <a href="/rrhh/gestion_empleados/lista_empleados.php" class="btn btn-ghost">Cancelar</a>
                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             </div>
         </form>

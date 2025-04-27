@@ -105,11 +105,12 @@ $result = $conn->query($sql);
                     <td><?php echo $row['fecha_ingreso_escuela'] ? date('d/m/Y', strtotime($row['fecha_ingreso_escuela'])) : 'No disponible'; ?></td>
                     <td class="<?php echo $estado_clase; ?>"><?php echo $estado_texto; ?></td>
                     <td class="flex space-x-2">
-                        <a href="rrhh/gestion_empleados/editar_empleado.php?id=<?php echo $row['id_empleado']; ?>" class="btn btn-ghost btn-sm">
+                        
+                        <a href="gestion_empleados/editar_empleado.php?id=<?php echo $row['id_empleado']; ?>" class="btn btn-ghost btn-sm">
                             Editar
                         </a>
                         <?php if ($row['estado_activo']): ?>
-                        <a href="cambiar_estado.php?id=<?php echo $row['id_empleado']; ?>&accion=baja" class="btn btn-ghost btn-sm text-error" 
+                        <a href="/admin/cambiar_estado.php?id=<?php echo $row['id_empleado']; ?>&accion=baja" class="btn btn-ghost btn-sm text-error" 
                            onclick="return confirm('¿Estás seguro de dar de baja a este empleado?');">
                             Dar Baja
                         </a>
