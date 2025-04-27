@@ -2,7 +2,7 @@
 // Iniciar sesión
 session_start();
 
-if (!isset($_SESSION['usuario']) || ($_SESSION['rol'] !== 'admin' && $_SESSION['rol'] !== 'rrhh')) {
+if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
     die("Acceso denegado");
 }
 
