@@ -185,7 +185,7 @@ $incapacidades_activas = $incapacidades_result->fetch_assoc()['total'];
                         <div class="dropdown dropdown-end">
                             <label tabindex="0" class="btn btn-sm m-1">Acciones</label>
                             <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                                <li><a href="modificar_empleado.php?id=<?php echo $row['id_empleado']; ?>">Editar Información</a></li>
+                                <li><a href="admin/modificar_empleado.php?id=<?php echo $row['id_empleado']; ?>">Editar Información</a></li>
                                 <li><a href="../nomina/rrhh/generar_nomina.php?id=<?php echo $row['id_empleado']; ?>">Gestionar Nómina</a></li>
                                 <li><a href="vacaciones/solicitudes.php?id=<?php echo $row['id_empleado']; ?>">Ver Vacaciones</a></li>
                                 <li><a href="incapacidades/gestionar.php?id=<?php echo $row['id_empleado']; ?>">Gestionar Incapacidades</a></li>

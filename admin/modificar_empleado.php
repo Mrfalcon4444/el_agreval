@@ -3,7 +3,7 @@
 session_start();
 
 // Verificar si el usuario está logueado y es administrador
-if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Administrador') {
+if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Administrador' || $_SESSION['rol'] != 'RRHH administrador') {
     header("Location: ../login.php");
     exit();
 }
