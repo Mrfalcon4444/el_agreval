@@ -20,7 +20,7 @@ include '../../includes/header.php';
 
 // Verificar que se recibió un ID válido
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    header("Location: dashboard.php?mensaje=ID de empleado inválido&tipo=error");
+    header("Location: /rrhh/gestion_empleados/lista_empleados.php?mensaje=ID de empleado inválido&tipo=error");
     exit();
 }
 
@@ -46,7 +46,7 @@ $result = $stmt->get_result();
 if ($result->num_rows === 0) {
     $stmt->close();
     $conn->close();
-    header("Location: dashboard.php?mensaje=Empleado no encontrado&tipo=error");
+    header("Location: /rrhh/gestion_empleados/lista_empleados.php?mensaje=Empleado no encontrado&tipo=error");
     exit();
 }
 
@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Ejecutar la consulta
             if ($stmt->execute()) {
                 // Redirigir al dashboard con mensaje de éxito
-                header("Location: dashboard.php?mensaje=Empleado actualizado exitosamente&tipo=success");
+                header("Location: /rrhh/gestion_empleados/lista_empleados.php?mensaje=Empleado actualizado exitosamente&tipo=success");
                 exit();
             } else {
                 $error = "Error al actualizar el empleado: " . $stmt->error;
