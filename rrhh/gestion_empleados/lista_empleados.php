@@ -48,10 +48,10 @@ $result = $conn->query($sql);
 <div class="container mx-auto px-4 py-8">
     <!-- Encabezado del Dashboard -->
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">Panel de Administración - Gestión de Empleados</h1>
+        <h1 class="text-2xl font-bold">Lista de Empleados</h1>
         <div class="flex items-center space-x-4">
             <span class="text-sm">Bienvenido, <?php echo htmlspecialchars($_SESSION['nickname']); ?></span>
-            <a href="../logout.php" class="btn btn-sm">Cerrar Sesión</a>
+            <a href="../../rrhh/dashboard.php"class="btn btn-sm">Volver al Dashboard</a>
         </div>
     </div>
     

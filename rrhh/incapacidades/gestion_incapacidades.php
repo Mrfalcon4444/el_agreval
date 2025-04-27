@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
-    header("Location: ../../login.php");
+    die("Acceso denegado");
     exit();
 }
 
