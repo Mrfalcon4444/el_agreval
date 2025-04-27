@@ -8,8 +8,7 @@ error_reporting(E_ALL);
 
 // Verificar si el usuario está logueado y es RRHH
 if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
-    header("Location: ../login.php");
-    exit();
+    die("Acceso denegado");
 }
 
 // Incluir archivo de configuración
