@@ -110,12 +110,12 @@ $result = $conn->query($sql);
                             Editar
                         </a>
                         <?php if ($row['estado_activo']): ?>
-                        <a href="/admin/cambiar_estado.php?id=<?php echo $row['id_empleado']; ?>&accion=baja" class="btn btn-ghost btn-sm text-error" 
+                        <a href="/rrhh/gestion_empleados/cambiar_estado.php?id=<?php echo $row['id_empleado']; ?>&accion=baja" class="btn btn-ghost btn-sm text-error" 
                            onclick="return confirm('¿Estás seguro de dar de baja a este empleado?');">
                             Dar Baja
                         </a>
                         <?php else: ?>
-                        <a href="cambiar_estado.php?id=<?php echo $row['id_empleado']; ?>&accion=alta" class="btn btn-ghost btn-sm text-success">
+                        <a href="/rrhh/gestion_empleados/cambiar_estado.php?id=<?php echo $row['id_empleado']; ?>&accion=alta" class="btn btn-ghost btn-sm text-success">
                             Activar
                         </a>
                         <?php endif; ?>
