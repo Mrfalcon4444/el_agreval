@@ -9,8 +9,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Empleado') {
 
 // Configuración para Hostinger
 $id_empleado = $_SESSION['id_empleado'];
-$upload_dir = __DIR__ . '/../../images/perfil/'; // Ruta absoluta en el servidor
-$web_path = '/images/perfil/'; // Ruta accesible desde la web
+$upload_dir = __DIR__ . '/../../imagenes/perfil/'; // Ruta absoluta en el servidor
+$web_path = '/imagenes/perfil/'; // Ruta accesible desde la web
 
 // Verificar y crear directorio con permisos
 if (!file_exists($upload_dir)) {
