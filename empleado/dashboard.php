@@ -119,7 +119,7 @@ $result_lista_activas = $stmt_lista_activas->get_result();
         </div>
     <?php endif; ?>
     
-    <div class="flex flex-col items-center space-y-4">
+    <div class="flex items-center space-x-6 mb-6">
         <!-- Foto de perfil circular -->
         <div class="avatar">
             <div class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -130,9 +130,8 @@ $result_lista_activas = $stmt_lista_activas->get_result();
         </div>
 
         <!-- Formulario para actualizar -->
-        <form class="flex flex-col items-center space-y-2">
-        <form action="/empleado/actualizar_foto.php" method="post" enctype="multipart/form-data" class="flex flex-col items-center space-y-2">
-            <label class="btn btn-sm btn-outline cursor-pointer">
+        <form action="/empleado/actualizar_foto.php" method="post" enctype="multipart/form-data" class="flex flex-col items-start space-y-2">
+            <label class="btn btn-sm btn-outline cursor-pointer flex items-center">
             <i class="fas fa-camera mr-2"></i>
             Cambiar foto
             <input type="file" name="foto" class="hidden" accept="image/*" onchange="previewImage(this)">
@@ -141,19 +140,18 @@ $result_lista_activas = $stmt_lista_activas->get_result();
         </form>
         </div>
 
-
-    <script>
-    function previewImage(input) {
+        <script>
+        function previewImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.querySelector('.avatar img').src = e.target.result;
-                document.getElementById('btn-submit').classList.remove('hidden');
+            document.querySelector('.avatar img').src = e.target.result;
+            document.getElementById('btn-submit').classList.remove('hidden');
             }
             reader.readAsDataURL(input.files[0]);
         }
-    }
-    </script>
+        }
+        </script>
     
     
     <!-- Información del empleado -->
