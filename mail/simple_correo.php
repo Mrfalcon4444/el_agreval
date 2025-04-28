@@ -7,23 +7,37 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-$id_empleado = $_GET['id_empleado']; // O el ID que recibas
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+// Verificar si se envió el ID del empleado
+if (!isset($_GET['id_empleado']) || empty($_GET['id_empleado'])) {
+    die("El ID del empleado no se ha proporcionado o está vacío.");
+}
 
+// Validar que el ID sea un número entero
+$id_empleado = filter_var($_GET['id_empleado'], FILTER_VALIDATE_INT);
+if (!$id_empleado) {
+    die("El ID del empleado no es válido.");
+}
+
+// Conexión a la base de datos
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-// Actualiza la consulta para usar 'nickname' en lugar de 'nombre'
+// Consulta SQL
 $stmt = $conn->prepare("SELECT correo, nickname FROM EMPLEADOS WHERE id_empleado = ?");
+if (!$stmt) {
+    die("Error en la preparación de la consulta: " . $conn->error);
+}
 $stmt->bind_param("i", $id_empleado);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $empleado = $result->fetch_assoc();
-    $destinatario = $empleado['correo']; // Correo del empleado
-    $nombre_empleado = $empleado['nickname']; // Nombre del empleado (nickname)
+    $destinatario = $empleado['correo'];
+    $nombre_empleado = $empleado['nickname'];
+    echo "Empleado encontrado: " . $nombre_empleado . " (" . $destinatario . ")";
 } else {
     die("No se encontró el empleado con ID: $id_empleado");
 }
@@ -49,8 +63,8 @@ try {
     
     // Enviar
     $mail->send();
-    echo "<h2 style='color:green;text-align:center;'>Enviado</h2>";
+    echo "<h2 style='color:green;text-align:center;'>Correo enviado correctamente</h2>";
 } catch (Exception $e) {
-    echo "<h2 style='color:red;text-align:center;'>Error</h2>";
+    echo "<h2 style='color:red;text-align:center;'>Error al enviar el correo: {$mail->ErrorInfo}</h2>";
 }
 ?>
