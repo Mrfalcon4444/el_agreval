@@ -2,40 +2,76 @@
 session_start();
 require_once '../config/config.php';
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Empleado'){
+if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Empleado') {
     header("Location: ../login.php");
     exit();
 }
 
-$id_empleado = $_SESSION['id_empleado'];
-$upload_dir = '../images/perfil/';
+// Debug
+file_put_contents('debug.log', "Inicio subida\n", FILE_APPEND);
 
-// Validar y procesar la imagen
+$id_empleado = $_SESSION['id_empleado'];
+$upload_dir = __DIR__ . '/../images/perfil/';
+
+// Verificar y crear directorio
+if (!file_exists($upload_dir)) {
+    if (!mkdir($upload_dir, 0755, true)) {
+        die("Error: No se pudo crear el directorio");
+    }
+}
+
 if ($_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-    $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-    $filename = 'emp_' . $id_empleado . '_' . time() . '.' . $ext;
-    $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+    // Validaciones
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+    $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
     
-    if (in_array(strtolower($ext), $allowed) {
-        if (move_uploaded_file($_FILES['foto']['tmp_name'], $upload_dir . $filename)) {
-            
-            $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-            $stmt = $conn->prepare("UPDATE EMPLEADOS SET foto_perfil = ? WHERE id_empleado = ?");
-            $stmt->bind_param("si", $filename, $id_empleado);
-            
-            if ($stmt->execute()) {
-                $_SESSION['foto_perfil'] = $upload_dir . $filename;
-                header("Location: dashboard.php?success=Foto actualizada");
-            } else {
-                header("Location: dashboard.php?error=Error en BD");
-            }
+    if (!in_array($ext, $allowed_extensions)) {
+        die("Error: Formato de imagen no permitido");
+    }
+
+    $max_size = 2 * 1024 * 1024; // 2MB
+    if ($_FILES['foto']['size'] > $max_size) {
+        die("Error: La imagen es demasiado grande (Máx. 2MB)");
+    }
+
+    // Generar nombre único
+    $filename = 'emp_' . $id_empleado . '_' . time() . '.' . $ext;
+    $target_path = $upload_dir . $filename;
+
+    file_put_contents('debug.log', "Moviendo a: $target_path\n", FILE_APPEND);
+
+    if (move_uploaded_file($_FILES['foto']['tmp_name'], $target_path)) {
+        // Guardar en BD (usando ruta accesible por web)
+        $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+        $db_path = '/images/perfil/' . $filename;
+        
+        $stmt = $conn->prepare("UPDATE EMPLEADOS SET foto_perfil = ? WHERE id_empleado = ?");
+        $stmt->bind_param("si", $db_path, $id_empleado);
+        
+        if ($stmt->execute()) {
+            file_put_contents('debug.log', "Éxito: $db_path\n", FILE_APPEND);
+            $_SESSION['foto_perfil'] = $db_path; // Actualizar sesión
+            header("Location: dashboard.php?success=1");
+            exit();
         } else {
-            header("Location: dashboard.php?error=Error al subir");
+            unlink($target_path);
+            die("Error BD: " . $conn->error);
         }
     } else {
-        header("Location: dashboard.php?error=Formato no válido");
+        $error = error_get_last();
+        file_put_contents('debug.log', "Error movimiento: " . print_r($error, true), FILE_APPEND);
+        die("Error al mover archivo: " . $error['message']);
     }
 } else {
-    header("Location: dashboard.php?error=Error en el archivo");
+    $upload_errors = [
+        0 => "No hay error",
+        1 => "Tamaño excede upload_max_filesize",
+        2 => "Tamaño excede MAX_FILE_SIZE",
+        3 => "Subida incompleta",
+        4 => "No se subió archivo",
+        6 => "Falta carpeta temporal",
+        7 => "Error escritura en disco",
+        8 => "Extensión detenida"
+    ];
+    die("Error subida: " . ($upload_errors[$_FILES['foto']['error'] ?? 'Desconocido']));
 }
-?>
