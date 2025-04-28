@@ -156,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Encabezado -->
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">Modificar Empleado</h1>
-        <a href="gestion_empleados/lista_empleados.php" class="btn btn-ghost">
+        <a href="/rrhh/gestion_empleados/lista_empleados.php" class="btn btn-ghost">
             Volver a la lista de empleados
         </a>
     </div>
