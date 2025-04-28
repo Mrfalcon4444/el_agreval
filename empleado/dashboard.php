@@ -123,20 +123,15 @@ $result_lista_activas = $stmt_lista_activas->get_result();
     <div class="flex items-center space-x-4 mb-6">
         <!-- Foto de perfil circular -->
         <div class="avatar">
-            <div class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 flex items-center justify-center bg-gray-200 overflow-hidden">
-                <?php if (!empty($empleado['foto_perfil'])): ?>
-                    <img src="<?php echo htmlspecialchars($empleado['foto_perfil']); ?>" 
-                        alt="Foto de perfil"
-                        onerror="this.src='../imagenes/perfil/default.jpg'">
-                <?php else: ?>
-                    <i class="fas fa-user text-6xl text-gray-500"></i> <!-- Ícono de persona -->
-                <?php endif; ?>
+            <div class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src="<?php echo !empty($empleado['foto_perfil']) ? htmlspecialchars($empleado['foto_perfil']) : '../images/perfil/default.jpg'; ?>" 
+                    alt="Foto de perfil"
+                    onerror="this.src='../imagenes/perfil/default.jpg'">
             </div>
         </div>
-
         
-        <!-- Formulario para actualizar -->
-        <form action="actualizar_foto.php" method="post" enctype="multipart/form-data" class="mt-2">
+         <!-- Formulario para actualizar -->
+         <form action="actualizar_foto.php" method="post" enctype="multipart/form-data" class="mt-2">
             <label class="btn btn-sm btn-outline cursor-pointer">
                 <i class="fas fa-camera mr-2"></i>
                 Cambiar foto
@@ -158,6 +153,7 @@ $result_lista_activas = $stmt_lista_activas->get_result();
         }
     }
     </script>
+    
     
     <!-- Información del empleado -->
     <div class="bg-base-100 shadow-xl rounded-lg p-6 mb-8">
