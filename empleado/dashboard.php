@@ -131,7 +131,7 @@ $result_lista_activas = $stmt_lista_activas->get_result();
         </div>
         
          <!-- Formulario para actualizar -->
-         <form action="actualizar_foto.php" method="post" enctype="multipart/form-data" class="mt-2">
+         <form action="./actualizar_foto.php" method="post" enctype="multipart/form-data" class="mt-2">
             <label class="btn btn-sm btn-outline cursor-pointer">
                 <i class="fas fa-camera mr-2"></i>
                 Cambiar foto
