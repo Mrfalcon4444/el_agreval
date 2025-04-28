@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Empleado') {
 file_put_contents('debug.log', "Inicio subida\n", FILE_APPEND);
 
 $id_empleado = $_SESSION['id_empleado'];
-$upload_dir = __DIR__ . '/../images/perfil/';
+$upload_dir = __DIR__ . '/../imagenes/perfil/';
 
 // Verificar y crear directorio
 if (!file_exists($upload_dir)) {
