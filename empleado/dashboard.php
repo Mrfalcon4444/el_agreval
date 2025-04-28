@@ -119,26 +119,27 @@ $result_lista_activas = $stmt_lista_activas->get_result();
         </div>
     <?php endif; ?>
     
-    <!-- Información de la foto de perfil -->
-    <div class="flex items-center space-x-4 mb-6">
+    <div class="flex flex-col items-center space-y-4">
         <!-- Foto de perfil circular -->
         <div class="avatar">
             <div class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                <img src="<?php echo !empty($empleado['foto_de_perfil']) ? htmlspecialchars($empleado['foto_de_perfil']) : '../images/perfil/default.jpg'; ?>" 
-                    alt="Foto de perfil"
-                    onerror="this.src='../imagenes/perfil/default.jpg'">
+            <img src="<?php echo !empty($empleado['foto_de_perfil']) ? htmlspecialchars($empleado['foto_de_perfil']) : '../images/perfil/default.jpg'; ?>" 
+                alt="Foto de perfil"
+                onerror="this.src='../imagenes/perfil/default.jpg'">
             </div>
         </div>
-        
-         <!-- Formulario para actualizar -->
-         <form action="/empleado/actualizar_foto.php" method="post" enctype="multipart/form-data" class="mt-2">
+
+        <!-- Formulario para actualizar -->
+        <form class="flex flex-col items-center space-y-2">
+        <form action="/empleado/actualizar_foto.php" method="post" enctype="multipart/form-data" class="flex flex-col items-center space-y-2">
             <label class="btn btn-sm btn-outline cursor-pointer">
-                <i class="fas fa-camera mr-2"></i>
-                Cambiar foto
-                <input type="file" name="foto" class="hidden" accept="image/*" onchange="previewImage(this)">
+            <i class="fas fa-camera mr-2"></i>
+            Cambiar foto
+            <input type="file" name="foto" class="hidden" accept="image/*" onchange="previewImage(this)">
             </label>
             <button type="submit" class="btn btn-sm btn-primary hidden" id="btn-submit">Guardar</button>
         </form>
+        </div>
 
 
     <script>
