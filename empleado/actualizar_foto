@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['foto'])) {
             if ($stmt->execute()) {
                 // Actualizar sesión y redirigir
                 $_SESSION['foto_perfil'] = $relative_path;
-                header("Location: dashboard.php?success=1");
+                header("Location: ../empleado/dashboard.php?success=1");
                 exit();
             } else {
                 unlink($target_file); // Eliminar archivo si falla la BD
