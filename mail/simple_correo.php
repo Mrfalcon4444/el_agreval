@@ -14,7 +14,8 @@ if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-$stmt = $conn->prepare("SELECT correo, nombre FROM EMPLEADOS WHERE id_empleado = ?");
+// Actualiza la consulta para usar 'nickname' en lugar de 'nombre'
+$stmt = $conn->prepare("SELECT correo, nickname FROM EMPLEADOS WHERE id_empleado = ?");
 $stmt->bind_param("i", $id_empleado);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -22,7 +23,7 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $empleado = $result->fetch_assoc();
     $destinatario = $empleado['correo']; // Correo del empleado
-    $nombre_empleado = $empleado['nombre']; // Nombre del empleado
+    $nombre_empleado = $empleado['nickname']; // Nombre del empleado (nickname)
 } else {
     die("No se encontró el empleado con ID: $id_empleado");
 }
@@ -38,7 +39,7 @@ try {
     $mail->SMTPDebug = 0; // Sin información de depuración
     
     // Destinatario
-    $mail->addAddress($destinatario);
+    $mail->addAddress($destinatario, $nombre_empleado);
     
     // Contenido
     $mail->isHTML(true);
@@ -52,4 +53,4 @@ try {
 } catch (Exception $e) {
     echo "<h2 style='color:red;text-align:center;'>Error</h2>";
 }
-?> 
+?>
