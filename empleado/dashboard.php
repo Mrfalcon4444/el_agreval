@@ -24,7 +24,7 @@ $conn->set_charset("utf8");
 // Obtener datos del empleado actual
 $id_empleado = $_SESSION['id_empleado'];
 $sql = "SELECT e.cargo, e.nickname, e.correo, e.telefono_personal, 
-               DATE(e.fecha_ingreso_escuela) as fecha_ingreso, d.nombre_departamento 
+               DATE(e.fecha_ingreso_escuela) as fecha_ingreso, d.nombre_departamento, e.foto_de_perfil 
         FROM EMPLEADOS e
         LEFT JOIN DEPARTAMENTO d ON e.id_departamento = d.id_departamento
         WHERE e.id_empleado = ?";
@@ -118,6 +118,41 @@ $result_lista_activas = $stmt_lista_activas->get_result();
             <?php echo htmlspecialchars($_GET['mensaje']); ?>
         </div>
     <?php endif; ?>
+    
+    <!-- Información de la foto de perfil -->
+    <div class="flex items-center space-x-4 mb-6">
+        <!-- Foto de perfil circular -->
+        <div class="avatar">
+            <div class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src="<?php echo !empty($empleado['foto_perfil']) ? htmlspecialchars($empleado['foto_perfil']) : '../images/perfil/default.jpg'; ?>" 
+                    alt="Foto de perfil"
+                    onerror="this.src='../images/perfil/default.jpg'">
+            </div>
+        </div>
+        
+        <!-- Formulario para actualizar -->
+        <form action="actualizar_foto.php" method="post" enctype="multipart/form-data" class="mt-2">
+            <label class="btn btn-sm btn-outline cursor-pointer">
+                <i class="fas fa-camera mr-2"></i>
+                Cambiar foto
+                <input type="file" name="foto" class="hidden" accept="image/*" onchange="previewImage(this)">
+            </label>
+            <button type="submit" class="btn btn-sm btn-primary hidden" id="btn-submit">Guardar</button>
+        </form>
+    </div>
+
+    <script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.avatar img').src = e.target.result;
+                document.getElementById('btn-submit').classList.remove('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
     
     <!-- Información del empleado -->
     <div class="bg-base-100 shadow-xl rounded-lg p-6 mb-8">
