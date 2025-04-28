@@ -7,12 +7,25 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-// Destinatario - CAMBIA ESTO
-$destinatario = 'einar.falcon6619@alumnos.udg.mx';
+$id_empleado = $_GET['id_empleado']; // O el ID que recibas
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Mensaje simple
-$asunto = 'Mensaje de prueba';
-$contenido = '<h3>Prueba</h3><p>Este es un mensaje de prueba desde El Agreval.</p>';
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
+
+$stmt = $conn->prepare("SELECT correo, nombre FROM EMPLEADOS WHERE id_empleado = ?");
+$stmt->bind_param("i", $id_empleado);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $empleado = $result->fetch_assoc();
+    $destinatario = $empleado['correo']; // Correo del empleado
+    $nombre_empleado = $empleado['nombre']; // Nombre del empleado
+} else {
+    die("No se encontró el empleado con ID: $id_empleado");
+}
 
 // Enviar el correo
 $mail = new PHPMailer\PHPMailer\PHPMailer(true);

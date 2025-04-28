@@ -57,6 +57,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("si", $comentario, $id_incapacidad);
     
     if ($stmt->execute()) {
+        // Enviar correo al empleado
+        require_once '../../mail/simple_correo.php'; // Asegúrate de que este archivo contiene la lógica para enviar correos
+
+        // Datos del empleado
+        $destinatario = $incapacidad['correo']; // Asegúrate de que el correo esté disponible en $incapacidad
+        $nombre_empleado = $incapacidad['nickname']; // Nombre del empleado
+
+        // Asunto y contenido del correo
+        $asunto = 'Estado de tu solicitud de incapacidad';
+        $contenido = "
+        <h3>Hola, $nombre_empleado</h3>
+        <p>Tu solicitud de incapacidad ha sido <strong>aprobada</strong> por Recursos Humanos.</p>
+        <p>Comentarios adicionales: $comentario</p>
+        <p>Si tienes alguna duda, no dudes en contactarnos.</p>
+        <p>Saludos,<br>El equipo de Recursos Humanos</p>
+        ";
+
+        // Enviar el correo
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+        try {
+            // Configuración SMTP
+            setupMailer($mail);
+            
+            // Desactivar depuración SMTP
+            $mail->SMTPDebug = 0; // Sin información de depuración
+            
+            // Destinatario
+            $mail->addAddress($destinatario, $nombre_empleado);
+            
+            // Contenido
+            $mail->isHTML(true);
+            $mail->Subject = $asunto;
+            $mail->Body = $contenido;
+            $mail->AltBody = strip_tags($contenido);
+            
+            // Enviar
+            $mail->send();
+        } catch (Exception $e) {
+            // Manejar errores de envío de correo
+            error_log("Error al enviar el correo: {$mail->ErrorInfo}");
+        }
+
+        // Redirigir con mensaje de éxito
         header("Location: gestion_incapacidades.php?mensaje=Incapacidad aprobada exitosamente&tipo=success");
         exit();
     } else {
