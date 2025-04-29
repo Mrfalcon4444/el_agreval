@@ -28,7 +28,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $id_incapacidad = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
 // Verificar que la incapacidad existe y está pendiente
-$sql = "SELECT i.*, e.nickname FROM INCAPACIDADES i 
+$sql = "SELECT i.*, e.nickname, e.correo FROM INCAPACIDADES i 
         JOIN EMPLEADOS e ON i.id_empleado = e.id_empleado 
         WHERE i.id_incapacidad = ?";
 $stmt = $conn->prepare($sql);
