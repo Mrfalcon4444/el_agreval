@@ -14,6 +14,22 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
 
 require_once '../../config/config.php';
 
+// Cargar PHPMailer
+require_once '../../mail/smtp_config.php';
+
+// Cargar PHPMailer desde la carpeta correcta
+$phpmailerPath = dirname(dirname(dirname(__FILE__))) . '/mail/phpmailer/';
+if (file_exists($phpmailerPath.'PHPMailer.php')) {
+    require_once $phpmailerPath.'PHPMailer.php';
+    require_once $phpmailerPath.'SMTP.php';
+    require_once $phpmailerPath.'Exception.php';
+} else {
+    error_log("PHPMailer no encontrado en: " . $phpmailerPath);
+}
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 // Verificar si el archivo autoload.php existe
 if (!file_exists('../../vendor/autoload.php')) {
     die("Error: No se encontró el archivo vendor/autoload.php. Por favor, ejecute 'composer require mpdf/mpdf' en el directorio raíz del proyecto.");
@@ -185,8 +201,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar_nomina'])) {
                 $conn->query($sql_update_pdf);
             }
             
-            $mensaje = "Nómina generada correctamente. <a href='../../$pdf_path' target='_blank' class='underline'>Ver PDF</a>";
-            $tipo = "success";
+            // Enviar correo al empleado con la notificación de nómina
+            if (enviar_notificacion_nomina($id_empleado, $empleado['nickname'], $empleado['correo'], $fecha_inicio, $fecha_fin, $fecha_pago, $salario_neto, $pdf_path)) {
+                $mensaje = "Nómina generada correctamente. <a href='../../$pdf_path' target='_blank' class='underline'>Ver PDF</a>";
+                $tipo = "success";
+            } else {
+                $mensaje = "Error al enviar la notificación de nómina al empleado: " . $conn->error;
+                $tipo = "error";
+            }
         } else {
             $mensaje = "Error al guardar el historial de nómina: " . $conn->error;
             $tipo = "error";
@@ -409,6 +431,89 @@ function generar_pdf($id_nomina, $conn) {
     }
     
     return $pdf_path;
+}
+
+// Función para enviar correo al empleado con la notificación de nómina
+function enviar_notificacion_nomina($id_empleado, $nombre_empleado, $correo_empleado, $fecha_inicio, $fecha_fin, $fecha_pago, $salario_neto, $pdf_path) {
+    global $smtp_config;
+    
+    // Asunto y contenido del correo
+    $asunto = 'Notificación de nueva nómina generada';
+    
+    // Formatear las fechas para mejorar la legibilidad
+    $fecha_inicio_formateada = date('d/m/Y', strtotime($fecha_inicio));
+    $fecha_fin_formateada = date('d/m/Y', strtotime($fecha_fin));
+    $fecha_pago_formateada = date('d/m/Y', strtotime($fecha_pago));
+    
+    // Crear el contenido del correo
+    $contenido = "
+    <html>
+    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;'>
+        <div style='background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 20px; margin-bottom: 20px;'>
+            <h2 style='color: #2c3e50; text-align: center;'>Nueva Nómina Generada</h2>
+            <p>Hola <strong>$nombre_empleado</strong>,</p>
+            <p>Te informamos que se ha generado tu nómina correspondiente al periodo del <strong>$fecha_inicio_formateada</strong> al <strong>$fecha_fin_formateada</strong>.</p>
+            
+            <div style='background-color: #f0f8ff; border-left: 4px solid #3498db; padding: 10px; margin: 15px 0;'>
+                <p style='margin: 0;'><strong>Información de tu nómina:</strong></p>
+                <ul style='padding-left: 20px;'>
+                    <li>Periodo: $fecha_inicio_formateada al $fecha_fin_formateada</li>
+                    <li>Fecha de pago: $fecha_pago_formateada</li>
+                    <li>Salario neto: $" . number_format($salario_neto, 2) . "</li>
+                </ul>
+            </div>
+            
+            <p>Puedes consultar tu nómina completa y el detalle de los conceptos en <a href='https://elagreval.icu' style='color: #3498db; text-decoration: none; font-weight: bold;'>elagreval.icu</a> iniciando sesión con tus credenciales.</p>
+            
+            <p>Si tienes alguna duda sobre tu nómina, por favor contacta al departamento de Recursos Humanos.</p>
+            
+            <p style='margin-top: 20px;'>Saludos,<br>El equipo de Recursos Humanos<br>El Agreval</p>
+        </div>
+        <p style='font-size: 12px; color: #999; text-align: center;'>Este es un correo automático, por favor no responder a esta dirección.</p>
+    </body>
+    </html>";
+
+    // Enviar el correo electrónico
+    $mail = new PHPMailer(true);
+
+    try {
+        // Configuración SMTP
+        $mail->isSMTP();
+        $mail->Host = $smtp_config['host'];
+        $mail->SMTPAuth = $smtp_config['auth'];
+        $mail->Username = $smtp_config['username'];
+        $mail->Password = $smtp_config['password'];
+        $mail->SMTPSecure = $smtp_config['secure'] === 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port = $smtp_config['port'];
+        $mail->CharSet = 'UTF-8';
+        
+        // Remitente
+        $mail->setFrom($smtp_config['from_email'], $smtp_config['from_name']);
+        
+        // Desactivar depuración SMTP
+        $mail->SMTPDebug = 0;
+        
+        // Destinatario
+        $mail->addAddress($correo_empleado, $nombre_empleado);
+        
+        // Adjuntar PDF de la nómina si existe
+        if ($pdf_path && file_exists("../../$pdf_path")) {
+            $mail->addAttachment("../../$pdf_path", "Nomina_" . date('Ymd') . ".pdf");
+        }
+        
+        // Contenido
+        $mail->isHTML(true);
+        $mail->Subject = $asunto;
+        $mail->Body = $contenido;
+        $mail->AltBody = strip_tags($contenido);
+        
+        // Enviar
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Error al enviar el correo de notificación de nómina: {$mail->ErrorInfo}");
+        return false;
+    }
 }
 ?>
 
