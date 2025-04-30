@@ -58,11 +58,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if ($stmt->execute()) {
         // Enviar correo al empleado
-        require_once '../../mail/simple_correo.php'; // Archivo con la configuración de PHPMailer
+        require_once '../../mail/simple_correo.php'; // Asegúrate de que este archivo contiene la lógica para enviar correos
 
         // Datos del empleado
-        $destinatario = $incapacidad['correo'];
-        $nombre_empleado = $incapacidad['nickname'];
+        $destinatario = $incapacidad['correo']; // Asegúrate de que el correo esté disponible en $incapacidad
+        $nombre_empleado = $incapacidad['nickname']; // Nombre del empleado
 
         // Asunto y contenido del correo
         $asunto = 'Estado de tu solicitud de incapacidad';
@@ -75,10 +75,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ";
 
         // Enviar el correo
-        $mail = new PHPMailer(true);
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
         try {
-            // Configuración SMTP usando la función en simple_correo.php
+            // Configuración SMTP
             setupMailer($mail);
             
             // Desactivar depuración SMTP
