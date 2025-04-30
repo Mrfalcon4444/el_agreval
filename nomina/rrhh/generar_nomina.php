@@ -201,13 +201,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generar_nomina'])) {
                 $conn->query($sql_update_pdf);
             }
             
-            // Enviar correo al empleado con la notificación de nómina
-            if (enviar_notificacion_nomina($id_empleado, $empleado['nickname'], $empleado['correo'], $fecha_inicio, $fecha_fin, $fecha_pago, $salario_neto, $pdf_path)) {
-                $mensaje = "Nómina generada correctamente. <a href='../../$pdf_path' target='_blank' class='underline'>Ver PDF</a>";
-                $tipo = "success";
+            // Obtener datos del empleado para el correo
+            $sql_empleado_correo = "SELECT nickname, correo FROM EMPLEADOS WHERE id_empleado = $id_empleado";
+            $result_empleado_correo = $conn->query($sql_empleado_correo);
+            
+            if ($result_empleado_correo && $result_empleado_correo->num_rows > 0) {
+                $empleado_datos = $result_empleado_correo->fetch_assoc();
+                $nombre_empleado = $empleado_datos['nickname'];
+                $correo_empleado = $empleado_datos['correo'];
+                
+                // Enviar correo al empleado con la notificación de nómina
+                if (enviar_notificacion_nomina($id_empleado, $nombre_empleado, $correo_empleado, $fecha_inicio, $fecha_fin, $fecha_pago, $salario_neto, $pdf_path)) {
+                    $mensaje = "Nómina generada correctamente. <a href='../../$pdf_path' target='_blank' class='underline'>Ver PDF</a>";
+                    $tipo = "success";
+                } else {
+                    $mensaje = "Nómina generada correctamente, pero hubo un error al enviar la notificación por correo.";
+                    $tipo = "warning";
+                }
             } else {
-                $mensaje = "Error al enviar la notificación de nómina al empleado: " . $conn->error;
-                $tipo = "error";
+                $mensaje = "Nómina generada correctamente, pero no se pudo enviar la notificación por falta de datos de contacto del empleado.";
+                $tipo = "warning";
             }
         } else {
             $mensaje = "Error al guardar el historial de nómina: " . $conn->error;
