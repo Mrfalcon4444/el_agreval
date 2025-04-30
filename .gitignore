@@ -1,1 +1,5 @@
 .qodo
+
+# Exclude database configuration file
+../config/config.php
+../config/mailer.php
