@@ -50,7 +50,7 @@ $update_stmt->bind_param("i", $id_incapacidad);
 
 if ($update_stmt->execute()) {
     // Enviar correo al empleado
-    require_once '../../mail/simple_correo.php'; // Asegúrate de que este archivo contiene la lógica para enviar correos
+    require_once '../../mail/simple_correo.php'; // Archivo con la configuración de PHPMailer
 
     // Datos del empleado
     $destinatario = $incapacidad['correo'];
@@ -66,10 +66,10 @@ if ($update_stmt->execute()) {
     ";
 
     // Enviar el correo
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    $mail = new PHPMailer(true);
 
     try {
-        // Configuración SMTP
+        // Configuración SMTP usando la función en simple_correo.php
         setupMailer($mail);
         
         // Desactivar depuración SMTP
