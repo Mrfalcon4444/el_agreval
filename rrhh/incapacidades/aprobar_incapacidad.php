@@ -8,6 +8,22 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
 
 require_once '../../config/config.php';
 
+// Cargar PHPMailer
+require_once '../../mail/smtp_config.php';
+
+// Cargar PHPMailer desde la carpeta correcta
+$phpmailerPath = dirname(dirname(dirname(__FILE__))) . '/mail/phpmailer/';
+if (file_exists($phpmailerPath.'PHPMailer.php')) {
+    require_once $phpmailerPath.'PHPMailer.php';
+    require_once $phpmailerPath.'SMTP.php';
+    require_once $phpmailerPath.'Exception.php';
+} else {
+    error_log("PHPMailer no encontrado en: " . $phpmailerPath);
+}
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 $pageTitle = "Aprobar Incapacidad - El Agreval";
 
 include '../../includes/header.php';
@@ -57,12 +73,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("si", $comentario, $id_incapacidad);
     
     if ($stmt->execute()) {
-        // Enviar correo al empleado
-        require_once '../../mail/simple_correo.php'; // Asegúrate de que este archivo contiene la lógica para enviar correos
-
         // Datos del empleado
-        $destinatario = $incapacidad['correo']; // Asegúrate de que el correo esté disponible en $incapacidad
-        $nombre_empleado = $incapacidad['nickname']; // Nombre del empleado
+        $destinatario = $incapacidad['correo'];
+        $nombre_empleado = $incapacidad['nickname'];
 
         // Asunto y contenido del correo
         $asunto = 'Estado de tu solicitud de incapacidad';
@@ -75,11 +88,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ";
 
         // Enviar el correo
-        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        $mail = new PHPMailer(true);
 
         try {
             // Configuración SMTP
-            setupMailer($mail);
+            $mail->isSMTP();
+            $mail->Host = $smtp_config['host'];
+            $mail->SMTPAuth = $smtp_config['auth'];
+            $mail->Username = $smtp_config['username'];
+            $mail->Password = $smtp_config['password'];
+            $mail->SMTPSecure = $smtp_config['secure'] === 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = $smtp_config['port'];
+            $mail->CharSet = 'UTF-8';
+            
+            // Remitente
+            $mail->setFrom($smtp_config['from_email'], $smtp_config['from_name']);
             
             // Desactivar depuración SMTP
             $mail->SMTPDebug = 0; // Sin información de depuración
