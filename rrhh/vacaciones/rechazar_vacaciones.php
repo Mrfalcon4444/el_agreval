@@ -8,6 +8,22 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'RRHH administrador') {
 
 require_once '../../config/config.php';
 
+// Cargar PHPMailer
+require_once '../../mail/smtp_config.php';
+
+// Cargar PHPMailer desde la carpeta correcta
+$phpmailerPath = dirname(dirname(dirname(__FILE__))) . '/mail/phpmailer/';
+if (file_exists($phpmailerPath.'PHPMailer.php')) {
+    require_once $phpmailerPath.'PHPMailer.php';
+    require_once $phpmailerPath.'SMTP.php';
+    require_once $phpmailerPath.'Exception.php';
+} else {
+    error_log("PHPMailer no encontrado en: " . $phpmailerPath);
+}
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 $pageTitle = "Rechazar Vacaciones - El Agreval";
 
 include '../../includes/header.php';
@@ -28,7 +44,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $id_vacaciones = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
 // Verificar que las vacaciones existen y están pendientes
-$sql = "SELECT v.*, e.nickname FROM VACACIONES v 
+$sql = "SELECT v.*, e.nickname, e.correo FROM VACACIONES v 
         JOIN EMPLEADOS e ON v.id_empleado = e.id_empleado 
         WHERE v.id_vacaciones = ?";
 $stmt = $conn->prepare($sql);
@@ -57,6 +73,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("si", $comentario, $id_vacaciones);
     
     if ($stmt->execute()) {
+        // Datos del empleado
+        $destinatario = $vacaciones['correo'];
+        $nombre_empleado = $vacaciones['nickname'];
+        $fecha_inicio = date('d/m/Y', strtotime($vacaciones['fecha_inicio']));
+        $fecha_fin = date('d/m/Y', strtotime($vacaciones['fecha_finalizacion']));
+        $dias = $vacaciones['dias_totales'];
+
+        // Asunto y contenido del correo
+        $asunto = 'Respuesta a tu solicitud de vacaciones';
+        $contenido = "
+        <h3>Hola, $nombre_empleado</h3>
+        <p>Lamentamos informarte que tu solicitud de vacaciones ha sido <strong>rechazada</strong> por Recursos Humanos.</p>
+        <p><strong>Detalles de la solicitud:</strong></p>
+        <ul>
+            <li>Fecha de inicio: $fecha_inicio</li>
+            <li>Fecha de finalización: $fecha_fin</li>
+            <li>Días totales: $dias</li>
+        </ul>
+        <p><strong>Motivo del rechazo:</strong> $comentario</p>
+        <p>Si necesitas discutir esta decisión o tienes alguna duda, no dudes en contactarnos.</p>
+        <p>Saludos,<br>El equipo de Recursos Humanos</p>
+        ";
+
+        // Enviar el correo
+        $mail = new PHPMailer(true);
+
+        try {
+            // Configuración SMTP
+            $mail->isSMTP();
+            $mail->Host = $smtp_config['host'];
+            $mail->SMTPAuth = $smtp_config['auth'];
+            $mail->Username = $smtp_config['username'];
+            $mail->Password = $smtp_config['password'];
+            $mail->SMTPSecure = $smtp_config['secure'] === 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = $smtp_config['port'];
+            $mail->CharSet = 'UTF-8';
+            
+            // Remitente
+            $mail->setFrom($smtp_config['from_email'], $smtp_config['from_name']);
+            
+            // Desactivar depuración SMTP
+            $mail->SMTPDebug = 0; // Sin información de depuración
+            
+            // Destinatario
+            $mail->addAddress($destinatario, $nombre_empleado);
+            
+            // Contenido
+            $mail->isHTML(true);
+            $mail->Subject = $asunto;
+            $mail->Body = $contenido;
+            $mail->AltBody = strip_tags($contenido);
+            
+            // Enviar
+            $mail->send();
+        } catch (Exception $e) {
+            // Manejar errores de envío de correo
+            error_log("Error al enviar el correo: {$mail->ErrorInfo}");
+        }
+
         header("Location: index.php?mensaje=Solicitud de vacaciones rechazada exitosamente&tipo=success");
         exit();
     } else {
