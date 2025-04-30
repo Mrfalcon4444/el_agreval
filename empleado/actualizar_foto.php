@@ -28,8 +28,6 @@ if (!is_writable($upload_dir)) {
 // Procesar la imagen solo si se envió correctamente
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['foto'])) {
     // Validar tipo de archivo
-    var_dump($_FILES); // <-- Agregar esto
-    exit();
     $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
     $detected_type = mime_content_type($_FILES['foto']['tmp_name']);
     
