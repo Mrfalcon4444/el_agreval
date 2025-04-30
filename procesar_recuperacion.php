@@ -10,6 +10,7 @@ ini_set('error_log', __DIR__ . '/php_errors.log');
 
 require_once 'config/config.php';
 require_once 'includes/functions.php';
+require_once 'mail/smtp_config.php'; // Incluir configuración SMTP segura
 
 // Carga flexible de PHPMailer (versión mejorada)
 $phpmailerLoaded = false;
@@ -99,18 +100,18 @@ try {
     // Configurar y enviar correo
     $mail = new PHPMailer(true);
     try {
-        // Configuración SMTP (debería estar en tu config/mail_config.php)
+        // Usar configuración SMTP segura
         $mail->isSMTP();
-        $mail->Host = 'smtp.hostinger.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'admin@elagreval.icu';
-        $mail->Password = 'AdminElAgreval123+';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Host = $smtp_config['host'];
+        $mail->SMTPAuth = $smtp_config['auth'];
+        $mail->Username = $smtp_config['username'];
+        $mail->Password = $smtp_config['password'];
+        $mail->SMTPSecure = $smtp_config['secure'] === 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port = $smtp_config['port'];
         $mail->CharSet = 'UTF-8';
 
         // Destinatario y contenido
-        $mail->setFrom('admin@elagreval.icu', 'El Agreval');
+        $mail->setFrom($smtp_config['from_email'], $smtp_config['from_name']);
         $mail->addAddress($correo, $nickname);
         
         // URL segura para resetear contraseña
@@ -147,12 +148,7 @@ try {
         </html>';
         
         $mail->AltBody = "Hola $nickname,\n\nPara restablecer tu contraseña, visita:\n$reset_url\n\nEste enlace expira en 24 horas.";
-        $reset_url = getBaseUrl()."/resetear_password.php?token=".urlencode($token)."&id=".$id_empleado;
 
-        error_log("URL de reseteo generada: " . $reset_url); // <-- AÑADE ESTA LÍNEA
-
-        $mail->isHTML(true);
- 
         $mail->send();
         
         header("Location: recuperar_password.php?mensaje=Si tu correo está registrado, recibirás un enlace para restablecer tu contraseña.&tipo=success");

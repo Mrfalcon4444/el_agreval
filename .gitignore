@@ -3,3 +3,4 @@
 # Exclude database configuration file
 ../config/config.php
 ../config/mailer.php
+../config/mail/smtp_config.php
