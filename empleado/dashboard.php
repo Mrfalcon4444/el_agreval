@@ -123,14 +123,22 @@ $result_lista_activas = $stmt_lista_activas->get_result();
         <!-- Foto de perfil circular -->
         <div class="avatar">
             <div class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src="<?php echo !empty($empleado['foto_de_perfil']) ? htmlspecialchars($empleado['foto_de_perfil']) : '../images/perfil/default.jpg'; ?>" 
+            <?php
+            // Determinar la ruta correcta de la imagen
+            $foto_perfil = !empty($empleado['foto_de_perfil']) ? $empleado['foto_de_perfil'] : '../imagenes/perfil/default.jpg';
+            // Si la ruta comienza con '/', agregar '..' para hacerla relativa desde este archivo
+            if (substr($foto_perfil, 0, 1) === '/') {
+                $foto_perfil = '..' . $foto_perfil;
+            }
+            ?>
+            <img src="<?php echo htmlspecialchars($foto_perfil); ?>" 
                 alt="Foto de perfil"
                 onerror="this.src='../imagenes/perfil/default.jpg'">
             </div>
         </div>
 
         <!-- Formulario para actualizar -->
-        <form action="/empleado/actualizar_foto.php" method="post" enctype="multipart/form-data" class="flex flex-col items-start space-y-2">
+        <form action="actualizar_foto.php" method="post" enctype="multipart/form-data" class="flex flex-col items-start space-y-2">
             <label class="btn btn-sm btn-outline cursor-pointer flex items-center">
             <i class="fas fa-camera mr-2"></i>
             Cambiar foto

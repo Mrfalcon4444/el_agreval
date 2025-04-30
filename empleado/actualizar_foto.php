@@ -7,10 +7,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['rol'] != 'Empleado') {
     exit();
 }
 
-// Configuración para Hostinger
+// Configuración para el almacenamiento de imágenes
 $id_empleado = $_SESSION['id_empleado'];
-$upload_dir = __DIR__ . '/../../imagenes/perfil/'; // Ruta absoluta en el servidor
-$web_path = '/imagenes/perfil/'; // Ruta accesible desde la web
+$upload_dir = '../imagenes/perfil/'; // Ruta relativa desde el archivo actual
+$web_path = '../imagenes/perfil/'; // Ruta accesible desde la web
 
 // Verificar y crear directorio con permisos
 if (!file_exists($upload_dir)) {
@@ -51,13 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['foto'])) {
         try {
             $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
             $stmt = $conn->prepare("UPDATE EMPLEADOS SET foto_de_perfil = ? WHERE id_empleado = ?");
-            $relative_path = $web_path . $filename;
+            $relative_path = '/imagenes/perfil/' . $filename; // Ruta desde la raíz del sitio web
             $stmt->bind_param("si", $relative_path, $id_empleado);
             
             if ($stmt->execute()) {
                 // Actualizar sesión y redirigir
                 $_SESSION['foto_de_perfil'] = $relative_path;
-                header("Location: dashboard.php?success=1");
+                header("Location: dashboard.php?mensaje=Foto actualizada correctamente&tipo=success");
                 exit();
             } else {
                 unlink($target_file); // Eliminar archivo si falla la BD
