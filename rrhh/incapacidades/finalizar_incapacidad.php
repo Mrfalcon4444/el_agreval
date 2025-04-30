@@ -24,7 +24,10 @@ if ($conn->connect_error) {
 $conn->set_charset("utf8");
 
 // Verificar que la incapacidad existe y está activa
-$check_sql = "SELECT id_incapacidad, id_empleado FROM INCAPACIDADES WHERE id_incapacidad = ? AND estado = 1";
+$check_sql = "SELECT i.id_incapacidad, i.id_empleado, e.nickname, e.correo 
+              FROM INCAPACIDADES i 
+              JOIN EMPLEADOS e ON i.id_empleado = e.id_empleado 
+              WHERE i.id_incapacidad = ? AND i.estado = 1";
 $check_stmt = $conn->prepare($check_sql);
 $check_stmt->bind_param("i", $id_incapacidad);
 $check_stmt->execute();
@@ -46,6 +49,48 @@ $update_stmt = $conn->prepare($update_sql);
 $update_stmt->bind_param("i", $id_incapacidad);
 
 if ($update_stmt->execute()) {
+    // Enviar correo al empleado
+    require_once '../../mail/simple_correo.php'; // Asegúrate de que este archivo contiene la lógica para enviar correos
+
+    // Datos del empleado
+    $destinatario = $incapacidad['correo'];
+    $nombre_empleado = $incapacidad['nickname'];
+
+    // Asunto y contenido del correo
+    $asunto = 'Finalización de tu periodo de incapacidad';
+    $contenido = "
+    <h3>Hola, $nombre_empleado</h3>
+    <p>Te informamos que tu periodo de <strong>incapacidad ha sido finalizado</strong> por Recursos Humanos.</p>
+    <p>Si tienes alguna duda, no dudes en contactarnos.</p>
+    <p>Saludos,<br>El equipo de Recursos Humanos</p>
+    ";
+
+    // Enviar el correo
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+    try {
+        // Configuración SMTP
+        setupMailer($mail);
+        
+        // Desactivar depuración SMTP
+        $mail->SMTPDebug = 0; // Sin información de depuración
+        
+        // Destinatario
+        $mail->addAddress($destinatario, $nombre_empleado);
+        
+        // Contenido
+        $mail->isHTML(true);
+        $mail->Subject = $asunto;
+        $mail->Body = $contenido;
+        $mail->AltBody = strip_tags($contenido);
+        
+        // Enviar
+        $mail->send();
+    } catch (Exception $e) {
+        // Manejar errores de envío de correo
+        error_log("Error al enviar el correo: {$mail->ErrorInfo}");
+    }
+    
     $mensaje = "Incapacidad finalizada exitosamente";
     $tipo = "success";
 } else {
