@@ -3,24 +3,24 @@
 ?>
 <footer class="footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
   <nav>
-    <h6 class="footer-title">Services</h6>
-    <a class="link link-hover">Branding</a>
-    <a class="link link-hover">Design</a>
-    <a class="link link-hover">Marketing</a>
-    <a class="link link-hover">Advertisement</a>
+    <h6 class="footer-title">Servicios</h6>
+    <a href="#" class="link link-hover">Gestión Académica</a>
+    <a href="#" class="link link-hover">Recursos Humanos</a>
+    <a href="#" class="link link-hover">Nóminas</a>
+    <a href="#" class="link link-hover">Incapacidades</a>
   </nav>
   <nav>
-    <h6 class="footer-title">Company</h6>
-    <a class="link link-hover">About us</a>
-    <a class="link link-hover">Contact</a>
-    <a class="link link-hover">Jobs</a>
-    <a class="link link-hover">Press kit</a>
+    <h6 class="footer-title">Institución</h6>
+    <a href="#" class="link link-hover">Sobre El Agreval</a>
+    <a href="#" class="link link-hover">Contacto</a>
+    <a href="#" class="link link-hover">Departamentos</a>
+    <a href="#" class="link link-hover">Directorio</a>
   </nav>
   <nav>
     <h6 class="footer-title">Legal</h6>
-    <a class="link link-hover">Terms of use</a>
-    <a class="link link-hover">Privacy policy</a>
-    <a class="link link-hover">Cookie policy</a>
+    <a href="#" class="link link-hover">Términos de uso</a>
+    <a href="#" class="link link-hover">Política de privacidad</a>
+    <a href="#" class="link link-hover">EAGR123456789</a>
   </nav>
 </footer>
 
