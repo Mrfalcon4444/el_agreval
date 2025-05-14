@@ -20,7 +20,6 @@
     <h6 class="footer-title">Legal</h6>
     <a href="#" class="link link-hover">Términos de uso</a>
     <a href="#" class="link link-hover">Política de privacidad</a>
-    <a href="#" class="link link-hover">EAGR123456789</a>
   </nav>
 </footer>
 
