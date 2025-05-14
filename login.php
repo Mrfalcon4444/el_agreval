@@ -63,6 +63,12 @@ include 'includes/header.php';
           </label>
         </div>
         
+
+        <!-- Recordarme y enlace -->
+        <div class="flex justify-between items-center w-full max-w-xs">
+          </label>
+          <a href="recuperar_password.php" class="text-sm text-primary hover:underline">¿Olvidaste tu contraseña?</a>
+        </div>
         
         <!-- Botón de inicio de sesión -->
         <div class="form-control mt-6 w-full max-w-xs">
